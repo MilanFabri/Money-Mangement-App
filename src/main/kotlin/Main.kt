@@ -1,8 +1,10 @@
+import models.Budget
 import mu.KotlinLogging
 import utils.ScannerInput
 import java.lang.System.exit
 
 private val logger = KotlinLogging.logger {}
+private val budgetAPI = controllers.BudgetAPI()
 
 fun main(args: Array<String>) {
     runMenu()
@@ -39,19 +41,31 @@ fun runMenu() {
 }
 
 fun createBudget(){
-    logger.info { "addNote() function invoked" }
+    //logger.info { "createBudget() function invoked" }
+    val budgetID = ScannerInput.readNextInt("Enter ID for your Budget: ")
+    val budgetTitle = ScannerInput.readNextLine("Enter the Title for your Budget: ")
+    val allocatedAmount = ScannerInput.readNextInt("Enter allocated amount to spend for your Budget: ")
+
+    val isAdded = budgetAPI.add(Budget(budgetID = budgetID, budgetTitle = budgetTitle, allocatedAmount = allocatedAmount))
+
+    if (isAdded) {
+        println("Budget Created Successfully!")
+    } else {
+        println("Budget Creation Failed! Try again")
+    }
 }
 
 fun listBudgets(){
-    logger.info { "listNotes() function invoked" }
+    //logger.info { "listBudgets() function invoked" }
+    println(budgetAPI.listAllBudgets())
 }
 
 fun updateBudget(){
-    logger.info { "updateNote() function invoked" }
+    logger.info { "updateBudget() function invoked" }
 }
 
 fun deleteBudget(){
-    logger.info { "deleteNote() function invoked" }
+    logger.info { "deleteBudget() function invoked" }
 }
 
 fun exitApp(){
