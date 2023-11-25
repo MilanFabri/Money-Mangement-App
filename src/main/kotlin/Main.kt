@@ -51,7 +51,7 @@ fun createBudget(){
     val budgetTitle = ScannerInput.readNextLine("Enter the Title for your Budget: ")
     val allocatedAmount = ScannerInput.readNextInt("Enter allocated amount to spend for your Budget: ")
 
-    val isAdded = budgetAPI.add(Budget(budgetID = budgetID, budgetTitle = budgetTitle, allocatedAmount = allocatedAmount))
+    val isAdded = budgetAPI.addBudget(Budget(budgetID = budgetID, budgetTitle = budgetTitle, allocatedAmount = allocatedAmount))
 
     if (isAdded) {
         println("Budget Created Successfully!")
@@ -70,7 +70,16 @@ fun updateBudget(){
 }
 
 fun deleteBudget(){
-    //logger.info { "deleteBudget() function invoked" }
+    listBudgets()
+    if (budgetAPI.numberOfBudgets() > 0) {
+        val id = readNextInt("Enter the ID of the Budget you wish to Delete: ")
+        val budgetToDelete = budgetAPI.deleteBudget(id)
+        if (budgetToDelete) {
+            println("Budget was deleted Successfully")
+        } else {
+            println("Budget deletion Failed! Try again")
+        }
+    }
 }
 
 fun addEntry(){
@@ -92,7 +101,7 @@ fun exitApp(){
 }
 
 private fun askUserToChooseBudget(): Budget? {
-    budgetAPI.listAllBudgets()
+    listBudgets()
     if (budgetAPI.numberOfExpiredBudgets() > 0) {
         val budget = budgetAPI.findBudget(readNextInt("\nEnter the ID of the budget you wish to add an Entry: "))
         if (budget != null) {
