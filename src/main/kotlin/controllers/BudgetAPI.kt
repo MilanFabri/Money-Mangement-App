@@ -6,6 +6,10 @@ import utils.Utilities.formatListString
 class BudgetAPI {
     private var budgets = ArrayList<Budget>()
 
+    fun findBudget(budgetID : Int) =  budgets.find{ budget -> budget.budgetID == budgetID }
+
+    fun numberOfExpiredBudgets(): Int = budgets.count { budget: Budget -> !budget.isBudgetExpired }
+
     private var lastId = 1
     private fun getId() = lastId++
 
