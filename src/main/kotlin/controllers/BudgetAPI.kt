@@ -2,6 +2,7 @@ package controllers
 
 import models.Budget
 import utils.Utilities.formatListString
+import utils.Utilities.isValidListIndex
 
 class BudgetAPI {
     private var budgets = ArrayList<Budget>()
@@ -16,10 +17,17 @@ class BudgetAPI {
     private var lastId = 0
     private fun getId() = lastId++
 
-    fun add(budget: Budget): Boolean {
+    fun addBudget(budget: Budget): Boolean {
         budget.budgetID = getId()
         return budgets.add(budget)
     }
+
+    fun deleteBudget(id: Int) = budgets.removeIf { budget -> budget.budgetID == id }
+
+    fun isValidIndex(id: Int): Boolean {
+        return isValidListIndex(id, budgets)
+    }
+
 
     fun listAllBudgets() =
         if (budgets.isEmpty()) "There is currently no budgets stored!"
