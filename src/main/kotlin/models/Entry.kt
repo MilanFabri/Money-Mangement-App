@@ -6,5 +6,4 @@ data class Entry(var entryID: Int,
                  var dateSpent: Int,
                  var amountSpent: Int,
                  var transactionType: String){
-
 }

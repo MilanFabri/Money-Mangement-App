@@ -1,6 +1,9 @@
 import models.Budget
+import models.Entry
 import mu.KotlinLogging
 import utils.ScannerInput
+import utils.ScannerInput.readNextInt
+import utils.ScannerInput.readNextLine
 import java.lang.System.exit
 
 private val logger = KotlinLogging.logger {}
@@ -20,6 +23,7 @@ fun mainMenu() : Int {
          > |   2) List all Budgets          |
          > |   3) Update a Budget           |
          > |   4) Delete a Budget           |
+         > |   5) Add Entry to Budget       |
          > ----------------------------------
          > |   0) Exit                      |
          > ----------------------------------
@@ -34,6 +38,7 @@ fun runMenu() {
             2  -> listBudgets()
             3  -> updateBudget()
             4  -> deleteBudget()
+            5  -> addEntry()
             0  -> exitApp()
             else -> println("Invalid option entered: ${option}")
         }
@@ -61,14 +66,44 @@ fun listBudgets(){
 }
 
 fun updateBudget(){
-    logger.info { "updateBudget() function invoked" }
+    //logger.info { "updateBudget() function invoked" }
 }
 
 fun deleteBudget(){
-    logger.info { "deleteBudget() function invoked" }
+    //logger.info { "deleteBudget() function invoked" }
+}
+
+fun addEntry(){
+    //logger.info { "addEntry() function invoked" }
+    val budget: Budget? = askUserToChooseBudget()
+    if (budget != null) {
+        budget.addEntry(Entry(entryID = readNextInt("\t Budget ID: "),
+            entryDesc = readNextLine ("\t Entry Description: "),
+            location = readNextLine("\t Location Spent: "),
+            dateSpent = readNextInt("\t Date Spent: "),
+            amountSpent = readNextInt("\t Amount Spent: "),
+            transactionType = readNextLine("\t How did you pay? :")))
+    }
 }
 
 fun exitApp(){
-    logger.info { "exitApp() function invoked" }
+    //logger.info { "exitApp() function invoked" }
     exit(0)
+}
+
+private fun askUserToChooseBudget(): Budget? {
+    budgetAPI.listAllBudgets()
+    if (budgetAPI.numberOfExpiredBudgets() > 0) {
+        val budget = budgetAPI.findBudget(readNextInt("\nEnter the ID of the budget you wish to add an Entry: "))
+        if (budget != null) {
+            if (budget.isBudgetExpired) {
+                println("This budget has already expired")
+            } else {
+                return budget
+            }
+        } else {
+            println("The budget with that ID is not valid! Try again")
+        }
+    }
+    return null
 }
