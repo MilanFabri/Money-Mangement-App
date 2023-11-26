@@ -93,4 +93,25 @@ class BudgetAPITests {
             assertEquals(1, populatedBudgets!!.numberOfBudgets())
         }
     }
+
+    @Nested
+    inner class UpdatingBudgets{
+        @Test
+        fun `updating a budget that does not exist returns false`(){
+            assertFalse(populatedBudgets!!.updateBudget(6, Budget(6, "Updating Budget", 2000, false)))
+            assertFalse(populatedBudgets!!.updateBudget(-1, Budget(-1, "Updating Budget", 500, false)))
+            assertFalse(emptyBudgets!!.updateBudget(0, Budget(0, "Updating Budget", 100, false)))
+        }
+
+        @Test
+        fun `updating a budget that exists returns true and updates`() {
+            assertEquals(holidayBudget, populatedBudgets!!.findBudget(0))
+            assertEquals("Holiday Budget", populatedBudgets!!.findBudget(0)!!.budgetTitle)
+            assertEquals(1000, populatedBudgets!!.findBudget(0)!!.allocatedAmount)
+
+            assertTrue(populatedBudgets!!.updateBudget(0, Budget(0, "Updating Budget", 2000, false)))
+            assertEquals("Updating Budget", populatedBudgets!!.findBudget(0)!!.budgetTitle)
+            assertEquals(2000, populatedBudgets!!.findBudget(0)!!.allocatedAmount)
+        }
+    }
 }

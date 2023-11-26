@@ -47,14 +47,13 @@ fun runMenu() {
 
 fun createBudget(){
     //logger.info { "createBudget() function invoked" }
-    val budgetID = ScannerInput.readNextInt("Enter ID for your Budget: ")
     val budgetTitle = ScannerInput.readNextLine("Enter the Title for your Budget: ")
     val allocatedAmount = ScannerInput.readNextInt("Enter allocated amount to spend for your Budget: ")
 
-    val isAdded = budgetAPI.addBudget(Budget(budgetID = budgetID, budgetTitle = budgetTitle, allocatedAmount = allocatedAmount))
+    val isAdded = budgetAPI.addBudget(Budget(budgetID = 0, budgetTitle = budgetTitle, allocatedAmount = allocatedAmount))
 
     if (isAdded) {
-        println("Budget Created Successfully!")
+        println("Budget was created Successfully!")
     } else {
         println("Budget Creation Failed! Try again")
     }
@@ -67,6 +66,22 @@ fun listBudgets(){
 
 fun updateBudget(){
     //logger.info { "updateBudget() function invoked" }
+    listBudgets()
+    if (budgetAPI.numberOfBudgets() > 0) {
+        val id = readNextInt("Enter the ID of the budget you wish to Update: ")
+        if (budgetAPI.findBudget(id) != null) {
+            val budgetTitle = readNextLine("Enter a new Title for your budget: ")
+            val allocatedAmount = readNextInt("Enter a new Allocated Amount for your budget: ")
+
+            if (budgetAPI.updateBudget(id, Budget(0, budgetTitle, allocatedAmount))){
+                println("Budget was update Successful!")
+            } else {
+                println("Budget update Failed! Try again")
+            }
+        } else {
+            println("There is currently no Budgets with that ID!")
+        }
+    }
 }
 
 fun deleteBudget(){

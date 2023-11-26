@@ -2,7 +2,6 @@ package controllers
 
 import models.Budget
 import utils.Utilities.formatListString
-import utils.Utilities.isValidListIndex
 
 class BudgetAPI {
     private var budgets = ArrayList<Budget>()
@@ -24,8 +23,17 @@ class BudgetAPI {
 
     fun deleteBudget(id: Int) = budgets.removeIf { budget -> budget.budgetID == id }
 
-    fun isValidIndex(id: Int): Boolean {
-        return isValidListIndex(id, budgets)
+    fun updateBudget(id: Int, budget: Budget?): Boolean {
+        val foundBudget = findBudget(id)
+
+        if ((foundBudget != null) && (budget != null)) {
+            foundBudget.budgetID = budget.budgetID
+            foundBudget.budgetTitle = budget.budgetTitle
+            foundBudget.allocatedAmount = budget.allocatedAmount
+            return true
+        }
+
+        return false
     }
 
 
