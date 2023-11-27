@@ -158,4 +158,23 @@ class BudgetAPITests {
             assertEquals(1, populatedEntry!!.numberOfEntries())
         }
     }
+
+    @Nested
+    inner class UpdatingEntries {
+        @Test
+        fun `updating a Entry that does not exist returns false`(){
+            assertFalse(populatedEntry!!.updateEntry(6, Entry(1, "Entry One Update", "Online", 23, 53, "Card")))
+            assertFalse(populatedEntry!!.updateEntry(-1, Entry(1, "Entry Two Update", "Tramore", 23, 163, "Card")))
+        }
+
+        @Test
+        fun `updating a Entry that exists returns true and updates`() {
+            assertEquals(firstEntry, populatedEntry!!.findOne(1))
+            assertEquals("Entry One", populatedEntry!!.findOne(1)!!.entryDesc)
+
+            assertTrue(populatedEntry!!.updateEntry(1, Entry(1, "New Entry One", "Waterford", 23, 150, "Cash")))
+            assertEquals("New Entry One", populatedEntry!!.findOne(1)!!.entryDesc)
+        }
+
+    }
 }

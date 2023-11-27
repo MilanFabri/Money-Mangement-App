@@ -11,7 +11,7 @@ class BudgetAPI {
         return budgets.size
     }
 
-    fun numberOfExpiredBudgets(): Int = budgets.count { budget: Budget -> !budget.isBudgetExpired }
+    fun numberOfClosedBudgets(): Int = budgets.count { budget: Budget -> !budget.isBudgetClosed }
 
     private var lastId = 1
     private fun getId() = lastId++
@@ -35,7 +35,6 @@ class BudgetAPI {
 
         return false
     }
-
 
     fun listAllBudgets() =
         if (budgets.isEmpty()) "There is currently no budgets stored!"
