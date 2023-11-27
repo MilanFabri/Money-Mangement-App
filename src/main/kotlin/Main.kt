@@ -27,6 +27,7 @@ fun mainMenu() : Int {
          > | Entry Options                  |
          > |   5) Add Entry to Budget       |
          > |   6) Delete an Entry           |
+         > |   7) Update an Entry           |
          > ----------------------------------
          > |   0) Exit                      |
          > ----------------------------------
@@ -43,6 +44,7 @@ fun runMenu() {
             4  -> deleteBudget()
             5  -> addEntry()
             6  -> deleteEntry()
+            7  -> updateEntry()
             0  -> exitApp()
             else -> println("Invalid option entered: ${option}")
         }
@@ -78,7 +80,7 @@ fun updateBudget(){
             val allocatedAmount = readNextInt("Enter a new Allocated Amount for your budget: ")
 
             if (budgetAPI.updateBudget(id, Budget(0, budgetTitle, allocatedAmount))){
-                println("Budget was update Successful!")
+                println("Budget was updated Successful!")
             } else {
                 println("Budget update Failed! Try again")
             }
@@ -105,7 +107,7 @@ fun addEntry(){
     //logger.info { "addEntry() function invoked" }
     val budget: Budget? = askUserToChooseBudget()
     if (budget != null) {
-        budget.addEntry(Entry(entryID = readNextInt("\t Budget ID: "),
+        budget.addEntry(Entry(entryID = 0,
             entryDesc = readNextLine ("\t Entry Description: "),
             location = readNextLine("\t Location Spent: "),
             dateSpent = readNextInt("\t Date Spent: "),
@@ -129,6 +131,31 @@ fun deleteEntry() {
     }
 }
 
+fun updateEntry() {
+    val budget: Budget? = askUserToChooseBudget()
+    if (budget != null) {
+        val entry: Entry? = askUserToChooseEntry(budget)
+        if (entry != null) {
+            val newDesc = readNextLine("Enter a new Description for Entry: ")
+            val newAmountSpent = readNextInt("Enter a new amount spent: ")
+            val newDateSpent = readNextInt("Enter a new date spent: ")
+            val newLocation = readNextLine("Enter a new location: ")
+            val newTransactionType = readNextLine("Enter a new transaction type: ")
+            if (budget.updateEntry(entry.entryID, Entry(entryID = 0, entryDesc = newDesc,
+                                                        amountSpent = newAmountSpent,
+                                                        dateSpent = newDateSpent,
+                                                        location = newLocation,
+                                                        transactionType = newTransactionType))) {
+                println("Entry was updated Successful!")
+            } else {
+                println("Entry update Failed! Try again")
+            }
+        } else {
+            println("There is currently no Entries with that ID!")
+        }
+    }
+}
+
 fun exitApp(){
     //logger.info { "exitApp() function invoked" }
     exit(0)
@@ -136,11 +163,11 @@ fun exitApp(){
 
 private fun askUserToChooseBudget(): Budget? {
     listBudgets()
-    if (budgetAPI.numberOfExpiredBudgets() > 0) {
+    if (budgetAPI.numberOfClosedBudgets() > 0) {
         val budget = budgetAPI.findBudget(readNextInt("\nEnter the ID of the budget you wish to select: "))
         if (budget != null) {
-            if (budget.isBudgetExpired) {
-                println("This budget has already expired")
+            if (budget.isBudgetClosed) {
+                println("This budget has already been closed")
             } else {
                 return budget
             }
