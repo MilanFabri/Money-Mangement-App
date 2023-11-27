@@ -6,8 +6,8 @@ import utils.Utilities.formatListString
 class BudgetAPI {
     private var budgets = ArrayList<Budget>()
 
-    fun findBudget(budgetID : Int) =  budgets.find{ budget -> budget.budgetID == budgetID }
-    fun numberOfBudgets(): Int{
+    fun findBudget(budgetID: Int) = budgets.find { budget -> budget.budgetID == budgetID }
+    fun numberOfBudgets(): Int {
         return budgets.size
     }
 
@@ -37,6 +37,9 @@ class BudgetAPI {
     }
 
     fun listAllBudgets() =
-        if (budgets.isEmpty()) "There is currently no budgets stored!"
-        else formatListString(budgets)
+        if (budgets.isEmpty()) {
+            "There is currently no budgets stored!"
+        } else {
+            formatListString(budgets)
+        }
 }

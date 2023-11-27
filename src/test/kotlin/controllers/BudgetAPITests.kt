@@ -2,11 +2,13 @@ package controllers
 
 import models.Budget
 import models.Entry
-import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertNull
+import kotlin.test.assertTrue
 class BudgetAPITests {
 
     private var holidayBudget: Budget? = null
@@ -40,7 +42,7 @@ class BudgetAPITests {
     }
 
     @AfterEach
-    fun tearDown(){
+    fun tearDown() {
         holidayBudget = null
         groceries = null
         weeklyBudget = null
@@ -108,9 +110,9 @@ class BudgetAPITests {
     }
 
     @Nested
-    inner class UpdatingBudgets{
+    inner class UpdatingBudgets {
         @Test
-        fun `updating a budget that does not exist returns false`(){
+        fun `updating a budget that does not exist returns false`() {
             assertFalse(populatedBudgets!!.updateBudget(6, Budget(6, "Updating Budget", 2000, false)))
             assertFalse(populatedBudgets!!.updateBudget(-1, Budget(-1, "Updating Budget", 500, false)))
             assertFalse(emptyBudgets!!.updateBudget(0, Budget(0, "Updating Budget", 100, false)))
@@ -162,7 +164,7 @@ class BudgetAPITests {
     @Nested
     inner class UpdatingEntries {
         @Test
-        fun `updating a Entry that does not exist returns false`(){
+        fun `updating a Entry that does not exist returns false`() {
             assertFalse(populatedEntry!!.updateEntry(6, Entry(1, "Entry One Update", "Online", 23, 53, "Card")))
             assertFalse(populatedEntry!!.updateEntry(-1, Entry(1, "Entry Two Update", "Tramore", 23, 163, "Card")))
         }
@@ -175,6 +177,5 @@ class BudgetAPITests {
             assertTrue(populatedEntry!!.updateEntry(1, Entry(1, "New Entry One", "Waterford", 23, 150, "Cash")))
             assertEquals("New Entry One", populatedEntry!!.findOne(1)!!.entryDesc)
         }
-
     }
 }
