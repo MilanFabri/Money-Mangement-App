@@ -13,7 +13,7 @@ class BudgetAPI {
 
     fun numberOfExpiredBudgets(): Int = budgets.count { budget: Budget -> !budget.isBudgetExpired }
 
-    private var lastId = 0
+    private var lastId = 1
     private fun getId() = lastId++
 
     fun addBudget(budget: Budget): Boolean {
