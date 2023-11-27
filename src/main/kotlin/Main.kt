@@ -18,12 +18,15 @@ fun mainMenu() : Int {
          > ----------------------------------
          > |       Money Management App     |
          > ----------------------------------
-         > | NOTE MENU                      |
+         > | Budget Options                 |
          > |   1) Create a Budget           |
          > |   2) List all Budgets          |
          > |   3) Update a Budget           |
          > |   4) Delete a Budget           |
+         > ----------------------------------
+         > | Entry Options                  |
          > |   5) Add Entry to Budget       |
+         > |   6) Delete an Entry           |
          > ----------------------------------
          > |   0) Exit                      |
          > ----------------------------------
@@ -39,6 +42,7 @@ fun runMenu() {
             3  -> updateBudget()
             4  -> deleteBudget()
             5  -> addEntry()
+            6  -> deleteEntry()
             0  -> exitApp()
             else -> println("Invalid option entered: ${option}")
         }
@@ -110,6 +114,21 @@ fun addEntry(){
     }
 }
 
+fun deleteEntry() {
+    val budget: Budget? = askUserToChooseBudget()
+    if (budget != null) {
+        val entry: Entry? = askUserToChooseEntry(budget)
+        if (entry != null) {
+            val isDeleted = budget.deleteEntry(entry.entryID)
+            if (isDeleted) {
+                println("Delete Successful!")
+            } else {
+                println("Delete NOT Successful")
+            }
+        }
+    }
+}
+
 fun exitApp(){
     //logger.info { "exitApp() function invoked" }
     exit(0)
@@ -118,7 +137,7 @@ fun exitApp(){
 private fun askUserToChooseBudget(): Budget? {
     listBudgets()
     if (budgetAPI.numberOfExpiredBudgets() > 0) {
-        val budget = budgetAPI.findBudget(readNextInt("\nEnter the ID of the budget you wish to add an Entry: "))
+        val budget = budgetAPI.findBudget(readNextInt("\nEnter the ID of the budget you wish to select: "))
         if (budget != null) {
             if (budget.isBudgetExpired) {
                 println("This budget has already expired")
@@ -130,4 +149,15 @@ private fun askUserToChooseBudget(): Budget? {
         }
     }
     return null
+}
+
+private fun askUserToChooseEntry(budget: Budget): Entry? {
+    if (budget.numberOfEntries() > 0) {
+        print(budget.listEntries())
+        return budget.findOne(readNextInt("\nEnter the ID of the entry you wish to select: "))
+    }
+    else{
+        println ("There is no entries inside this Budget")
+        return null
+    }
 }
