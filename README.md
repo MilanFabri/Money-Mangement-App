@@ -5,12 +5,12 @@
 <img src="https://github.com/soft-dev-tools/notes-app-MilanFabri/assets/117904820/cdce08f7-f669-40da-8ff0-08c9c01258a5" align="right" width="75" height="75">
 <img src="https://github.com/soft-dev-tools/notes-app-MilanFabri/assets/117904820/7a4fe190-7132-4c5f-9e7e-a2b11e42dd8e" align="right" width="75" height="75">
 
-## Menu-driven Money Mangement App - Version 2.0
+## Menu-driven Money Mangement App - Version 3.0
 <br>
 
 ### Features:
-- Functionality for **"Adding"**, **"Listing"**, **"Updating"**, and **"Deleting"** Budgets.
+- Functionality for **"Adding"**, **"Listing"**, **"Updating"**, and **"Deleting"** Budgets and Entries.
 - Logging capabilities are added via MicroUtils Kotlin-Logging
 - ScannerInput utility is included for robust user I/O
-- **Entries** model with adding **Entries** to **Budgets** functionality
+- Grade Tasks such as **"Dokka"**, **"Kdocs"**, **"Jacoco"**, **"KTLint"** and **"Fat Jar"**
 - **JUnit** Testing for code
