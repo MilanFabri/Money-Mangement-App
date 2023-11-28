@@ -1,6 +1,7 @@
 package models
 
 import utils.Utilities
+import utils.Utilities.formatListString
 
 data class Budget(
     var budgetID: Int,
@@ -46,7 +47,7 @@ data class Budget(
             foundEntry.transactionType = newEntry.transactionType
             return true
         }
-
         return false
     }
+
 }

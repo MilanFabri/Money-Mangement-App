@@ -5,9 +5,15 @@ import utils.ScannerInput
 import utils.ScannerInput.readNextInt
 import utils.ScannerInput.readNextLine
 import java.lang.System.exit
+import persistence.Serializer
+import persistence.XMLSerializer
+import persistence.JSONSerializer
+import java.io.File
+import controllers.BudgetAPI
 
 private val logger = KotlinLogging.logger {}
-private val budgetAPI = controllers.BudgetAPI()
+private val budgetAPI = BudgetAPI(XMLSerializer(File("budgets.xml")))
+//private val budgetAPI = BudgetAPI(JSONSerializer(File("budgets.json")))
 
 fun main(args: Array<String>) {
     runMenu()
@@ -16,23 +22,25 @@ fun main(args: Array<String>) {
 fun mainMenu(): Int {
     return ScannerInput.readNextInt(
         """ 
-         > ----------------------------------
-         > |       Money Management App     |
-         > ----------------------------------
-         > | Budget Options                 |
-         > |   1) Create a Budget           |
-         > |   2) List all Budgets          |
-         > |   3) Update a Budget           |
-         > |   4) Delete a Budget           |
-         > ----------------------------------
-         > | Entry Options                  |
-         > |   5) Add Entry to Budget       |
-         > |   6) Delete an Entry           |
-         > |   7) Update an Entry           |
-         > ----------------------------------
-         > |   0) Exit                      |
-         > ----------------------------------
-         > ==>> """.trimMargin(">")
+             > ----------------------------------
+             > |       Money Management App     |
+             > ----------------------------------
+             > | Budget Options                 |
+             > |   1) Create a Budget           |
+             > |   2) List all Budgets          |
+             > |   3) Update a Budget           |
+             > |   4) Delete a Budget           |
+             > ----------------------------------
+             > | Entry Options                  |
+             > |   5) Add Entry to Budget       |
+             > |   6) Delete an Entry           |
+             > |   7) Update an Entry           |
+             > ----------------------------------
+             > |   8) Save                      |
+             > |   9) Load                      |
+             > |   0) Exit                      |
+             > ----------------------------------
+             > ==>> """.trimMargin(">")
     )
 }
 
@@ -47,6 +55,8 @@ fun runMenu() {
             5 -> addEntry()
             6 -> deleteEntry()
             7 -> updateEntry()
+            8 -> save()
+            9 -> load()
             0 -> exitApp()
             else -> println("Invalid option entered: $option")
         }
@@ -58,7 +68,8 @@ fun createBudget() {
     val budgetTitle = ScannerInput.readNextLine("Enter the Title for your Budget: ")
     val allocatedAmount = ScannerInput.readNextInt("Enter allocated amount to spend for your Budget: ")
 
-    val isAdded = budgetAPI.addBudget(Budget(budgetID = 0, budgetTitle = budgetTitle, allocatedAmount = allocatedAmount))
+    val isAdded =
+        budgetAPI.addBudget(Budget(budgetID = 0, budgetTitle = budgetTitle, allocatedAmount = allocatedAmount))
 
     if (isAdded) {
         println("Budget was created Successfully!")
@@ -150,13 +161,13 @@ fun updateEntry() {
             if (budget.updateEntry(
                     entry.entryID,
                     Entry(
-                            entryID = 0,
-                            entryDesc = newDesc,
-                            amountSpent = newAmountSpent,
-                            dateSpent = newDateSpent,
-                            location = newLocation,
-                            transactionType = newTransactionType
-                        )
+                        entryID = 0,
+                        entryDesc = newDesc,
+                        amountSpent = newAmountSpent,
+                        dateSpent = newDateSpent,
+                        location = newLocation,
+                        transactionType = newTransactionType
+                    )
                 )
             ) {
                 println("Entry was updated Successful!")
@@ -172,6 +183,22 @@ fun updateEntry() {
 fun exitApp() {
     // logger.info { "exitApp() function invoked" }
     exit(0)
+}
+
+fun save() {
+    try {
+        budgetAPI.store()
+    } catch (e: Exception) {
+        System.err.println(" ┃ Error writing to file: $e")
+    }
+}
+
+fun load() {
+    try {
+        budgetAPI.load()
+    } catch (e: Exception) {
+        System.err.println(" ┃ Error reading from file: $e")
+    }
 }
 
 private fun askUserToChooseBudget(): Budget? {
