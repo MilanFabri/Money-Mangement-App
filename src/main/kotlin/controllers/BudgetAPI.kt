@@ -1,9 +1,12 @@
 package controllers
 
 import models.Budget
+import models.Entry
 import utils.Utilities.formatListString
+import persistence.Serializer
 
-class BudgetAPI {
+class BudgetAPI(serializerType: Serializer) {
+    private var serializer: Serializer = serializerType
     private var budgets = ArrayList<Budget>()
 
     fun findBudget(budgetID: Int) = budgets.find { budget -> budget.budgetID == budgetID }
@@ -42,4 +45,14 @@ class BudgetAPI {
         } else {
             formatListString(budgets)
         }
+
+    @Throws(Exception::class)
+    fun load() {
+        budgets = serializer.read() as ArrayList<Budget>
+    }
+
+    @Throws(Exception::class)
+    fun store() {
+        serializer.write(budgets)
+    }
 }

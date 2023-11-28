@@ -2,10 +2,10 @@ package controllers
 
 import models.Budget
 import models.Entry
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
+import persistence.JSONSerializer
+import persistence.XMLSerializer
+import java.io.File
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -17,10 +17,10 @@ class BudgetAPITests {
     private var firstEntry: Entry? = null
     private var secondEntry: Entry? = null
     private var thirdEntry: Entry? = null
-    private var populatedBudgets: BudgetAPI? = BudgetAPI()
+    private var populatedBudgets: BudgetAPI? = BudgetAPI(XMLSerializer(File("budgets.xml")))
     private var populatedEntry: Budget? = Budget(1, "testing", 100)
     private var Entries: Budget? = null
-    private var emptyBudgets: BudgetAPI? = BudgetAPI()
+    private var emptyBudgets: BudgetAPI? = BudgetAPI(XMLSerializer(File("budgets.xml")))
 
     @BeforeEach
     fun setup() {
@@ -178,4 +178,74 @@ class BudgetAPITests {
             assertEquals("New Entry One", populatedEntry!!.findOne(1)!!.entryDesc)
         }
     }
+
+    @Nested
+    inner class PersistenceTests {
+
+        @Test
+        fun `saving and loading an empty collection in XML doesn't crash app`() {
+            val storingBudgets = BudgetAPI(XMLSerializer(File("budgets.xml")))
+            storingBudgets.store()
+
+            val loadedBudgets = BudgetAPI(XMLSerializer(File("budgets.xml")))
+            loadedBudgets.load()
+
+            Assertions.assertEquals(0, storingBudgets.numberOfBudgets())
+            Assertions.assertEquals(0, loadedBudgets.numberOfBudgets())
+            assertEquals(storingBudgets.numberOfBudgets(), loadedBudgets.numberOfBudgets())
+        }
+
+        @Test
+        fun `saving and loading an loaded collection in XML doesn't loose data`() {
+            val storingBudgets = BudgetAPI(XMLSerializer(File("budgets.xml")))
+            storingBudgets.addBudget(holidayBudget!!)
+            storingBudgets.addBudget(groceries!!)
+            storingBudgets.addBudget(weeklyBudget!!)
+            storingBudgets.store()
+
+            val loadedBudgets = BudgetAPI(XMLSerializer(File("budgets.xml")))
+            loadedBudgets.load()
+
+            Assertions.assertEquals(3, storingBudgets.numberOfBudgets())
+            Assertions.assertEquals(3, loadedBudgets.numberOfBudgets())
+            assertEquals(storingBudgets.numberOfBudgets(), loadedBudgets.numberOfBudgets())
+            assertEquals(storingBudgets.findBudget(1), loadedBudgets.findBudget(1))
+            assertEquals(storingBudgets.findBudget(2), loadedBudgets.findBudget(2))
+            assertEquals(storingBudgets.findBudget(3), loadedBudgets.findBudget(3))
+        }
+
+        @Test
+        fun `saving and loading an empty collection in JSON doesn't crash app`() {
+            val storingBudgets = BudgetAPI(JSONSerializer(File("budgets.json")))
+            storingBudgets.store()
+
+            val loadedBudgets = BudgetAPI(JSONSerializer(File("budgets.json")))
+            loadedBudgets.load()
+
+            Assertions.assertEquals(0, storingBudgets.numberOfBudgets())
+            Assertions.assertEquals(0, loadedBudgets.numberOfBudgets())
+            assertEquals(storingBudgets.numberOfBudgets(), loadedBudgets.numberOfBudgets())
+        }
+
+        @Test
+        fun `saving and loading an loaded collection in JSON doesn't loose data`() {
+            val storingBudgets = BudgetAPI(JSONSerializer(File("budgets.json")))
+            storingBudgets.addBudget(holidayBudget!!)
+            storingBudgets.addBudget(groceries!!)
+            storingBudgets.addBudget(weeklyBudget!!)
+            storingBudgets.store()
+
+            val loadedBudgets = BudgetAPI(JSONSerializer(File("budgets.json")))
+            loadedBudgets.load()
+
+            Assertions.assertEquals(3, storingBudgets.numberOfBudgets())
+            Assertions.assertEquals(3, loadedBudgets.numberOfBudgets())
+            assertEquals(storingBudgets.numberOfBudgets(), loadedBudgets.numberOfBudgets())
+            assertEquals(storingBudgets.findBudget(1), loadedBudgets.findBudget(1))
+            assertEquals(storingBudgets.findBudget(2), loadedBudgets.findBudget(2))
+            assertEquals(storingBudgets.findBudget(3), loadedBudgets.findBudget(3))
+        }
+    }
+
+
 }
