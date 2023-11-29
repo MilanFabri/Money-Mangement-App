@@ -50,4 +50,11 @@ data class Budget(
         return false
     }
 
+    override fun toString(): String {
+    return "┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓ \n" +
+           "  $budgetID Budget Title : $budgetTitle ┃ Allocated Amount : €$allocatedAmount \n ${listEntries()} \n" +
+           "┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛"
+
+    }
+
 }

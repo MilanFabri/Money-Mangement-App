@@ -4,6 +4,7 @@ import models.Budget
 import models.Entry
 import utils.Utilities.formatListString
 import persistence.Serializer
+import utils.Utilities
 
 class BudgetAPI(serializerType: Serializer) {
     private var serializer: Serializer = serializerType
@@ -46,13 +47,13 @@ class BudgetAPI(serializerType: Serializer) {
             formatListString(budgets)
         }
 
-    @Throws(Exception::class)
-    fun load() {
-        budgets = serializer.read() as ArrayList<Budget>
-    }
+        @Throws(Exception::class)
+        fun load() {
+            budgets = serializer.read() as ArrayList<Budget>
+        }
 
-    @Throws(Exception::class)
-    fun store() {
-        serializer.write(budgets)
+        @Throws(Exception::class)
+        fun store() {
+            serializer.write(budgets)
+        }
     }
-}
