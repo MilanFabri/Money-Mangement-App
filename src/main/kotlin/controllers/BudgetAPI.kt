@@ -11,11 +11,9 @@ class BudgetAPI(serializerType: Serializer) {
     private var budgets = ArrayList<Budget>()
 
     fun findBudget(budgetID: Int) = budgets.find { budget -> budget.budgetID == budgetID }
-    fun numberOfBudgets(): Int {
-        return budgets.size
-    }
-
-    fun numberOfClosedBudgets(): Int = budgets.count { budget: Budget -> !budget.isBudgetClosed }
+    fun numberOfBudgets() = budgets.size
+    fun numberOfClosedBudgets(): Int = budgets.count { budget: Budget -> budget.isBudgetClosed }
+    fun numberOfActiveBudgets(): Int = budgets.count { budget: Budget -> !budget.isBudgetClosed }
 
     private var lastId = 1
     private fun getId() = lastId++
@@ -26,6 +24,15 @@ class BudgetAPI(serializerType: Serializer) {
     }
 
     fun deleteBudget(id: Int) = budgets.removeIf { budget -> budget.budgetID == id }
+
+    fun closeBudget(id: Int): Boolean {
+        val foundBudget = findBudget(id)
+        if (( foundBudget != null) && (!foundBudget.isBudgetClosed)){
+            foundBudget.isBudgetClosed = true
+            return true
+        }
+        return false
+    }
 
     fun updateBudget(id: Int, budget: Budget?): Boolean {
         val foundBudget = findBudget(id)
@@ -46,6 +53,14 @@ class BudgetAPI(serializerType: Serializer) {
         } else {
             formatListString(budgets)
         }
+
+    fun listActiveBudgets() =
+        if (numberOfActiveBudgets() == 0) "There is currently no active budgets stored!"
+        else formatListString(budgets.filter { budget -> !budget.isBudgetClosed })
+
+    fun listClosedBudgets() =
+        if (numberOfClosedBudgets() == 0) "There is currently no closed budgets stored!"
+        else formatListString(budgets.filter { budget -> budget.isBudgetClosed })
 
         @Throws(Exception::class)
         fun load() {

@@ -28,14 +28,15 @@ fun mainMenu(): Int {
              > ┃   2) List all Budgets          ┃
              > ┃   3) Update a Budget           ┃
              > ┃   4) Delete a Budget           ┃
+             > ┃   5) Close a Budget            ┃
              > ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
              > ┃ Entry Options                  ┃
-             > ┃   5) Add Entry to Budget       ┃
-             > ┃   6) Delete an Entry           ┃
-             > ┃   7) Update an Entry           ┃
+             > ┃   6) Add Entry to Budget       ┃
+             > ┃   7) Delete an Entry           ┃
+             > ┃   8) Update an Entry           ┃
              > ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
-             > ┃   8) Save                      ┃
-             > ┃   9) Load                      ┃
+             > ┃   9) Save                      ┃
+             > ┃   10) Load                     ┃
              > ┃   0) Exit                      ┃
              > ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
              > ==>> """.trimMargin(">")
@@ -50,11 +51,12 @@ fun runMenu() {
             2 -> listBudgets()
             3 -> updateBudget()
             4 -> deleteBudget()
-            5 -> addEntry()
-            6 -> deleteEntry()
-            7 -> updateEntry()
-            8 -> save()
-            9 -> load()
+            5 -> closeBudget()
+            6 -> addEntry()
+            7 -> deleteEntry()
+            8 -> updateEntry()
+            9 -> save()
+            10 -> load()
             0 -> exitApp()
             else -> println("Invalid option entered: $option")
         }
@@ -79,6 +81,10 @@ fun createBudget() {
 fun listBudgets() {
     // logger.info { "listBudgets() function invoked" }
     println(budgetAPI.listAllBudgets())
+}
+
+fun listActiveBudgets() {
+    println(budgetAPI.listActiveBudgets())
 }
 
 fun updateBudget() {
@@ -110,6 +116,18 @@ fun deleteBudget() {
             println("Budget was deleted Successfully")
         } else {
             println("Budget deletion Failed! Try again")
+        }
+    }
+}
+
+fun closeBudget() {
+    listActiveBudgets()
+    if (budgetAPI.numberOfActiveBudgets() > 0) {
+        val id = readNextInt("Enter the ID of the Budget you wish to Close: ")
+        if (budgetAPI.closeBudget(id)) {
+            println("Budget was closed Successfully")
+        } else {
+            println("Budget closing Failed! Try again")
         }
     }
 }
