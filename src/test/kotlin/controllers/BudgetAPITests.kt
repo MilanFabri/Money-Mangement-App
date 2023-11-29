@@ -6,6 +6,7 @@ import org.junit.jupiter.api.*
 import persistence.JSONSerializer
 import persistence.XMLSerializer
 import java.io.File
+import java.util.*
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -176,6 +177,63 @@ class BudgetAPITests {
 
             assertTrue(populatedEntry!!.updateEntry(1, Entry(1, "New Entry One", "Waterford", 23, 150, "Cash")))
             assertEquals("New Entry One", populatedEntry!!.findOne(1)!!.entryDesc)
+        }
+    }
+
+    @Nested
+    inner class ListActiveBudgets {
+        @Test
+        fun `listActiveBudgets returns no active budgets stored when ArrayList is empty`() {
+            assertEquals(0, emptyBudgets!!.numberOfActiveBudgets())
+            assertTrue(
+                emptyBudgets!!.listActiveBudgets().contains("There is currently no active budgets stored!")
+            )
+        }
+
+        @Test
+        fun `listActiveNotes returns active notes when ArrayList has active notes stored`() {
+            assertEquals(3, populatedBudgets!!.numberOfActiveBudgets())
+            val activeNotesString = populatedBudgets!!.listActiveBudgets().lowercase()
+            holidayBudget = Budget(1, "Holiday Budget", 1000, false)
+            groceries = Budget(2, "Groceries", 100, false)
+            weeklyBudget = Budget(3, "Weekly Budget", 200, false)
+        }
+    }
+
+    @Nested
+    inner class ListClosedBudgets{
+
+        @Test
+        fun `listArchivedNotes returns no archived notes when ArrayList is empty`() {
+            Assertions.assertEquals(0, emptyBudgets!!.numberOfClosedBudgets())
+            assertTrue(
+                emptyBudgets!!.listClosedBudgets().contains("There is currently no closed budgets stored!")
+            )
+        }
+
+        @Test
+        fun `listArchivedNotes returns archived notes when ArrayList has archived notes stored`() {
+            Assertions.assertEquals(0, populatedBudgets!!.numberOfClosedBudgets())
+            val closedBudgetsString = populatedBudgets!!.listClosedBudgets().lowercase(Locale.getDefault())
+            holidayBudget = Budget(1, "Holiday Budget", 1000, false)
+            groceries = Budget(2, "Groceries", 100, false)
+            weeklyBudget = Budget(3, "Weekly Budget", 200, false)
+        }
+    }
+
+    @Nested
+    inner class CloseBudgets {
+        @Test
+        fun `closing a Budget that does not exist, returns null`() {
+            assertFalse(populatedBudgets!!.closeBudget(-5))
+            assertFalse(populatedBudgets!!.closeBudget(-3))
+            assertFalse(populatedBudgets!!.closeBudget(-1))
+        }
+
+        @Test
+        fun `closing a Budget that exists closes and returns closed object`() {
+            assertTrue(populatedBudgets!!.closeBudget(1))
+            assertEquals(1, populatedBudgets!!.numberOfClosedBudgets())
         }
     }
 

@@ -6,7 +6,7 @@ import models.Entry
 object Utilities {
 
     @JvmStatic
-    fun formatListString(budgetsToFormat: ArrayList<Budget>): String =
+    fun formatListString(budgetsToFormat: List<Budget>): String =
         budgetsToFormat
             .joinToString(separator = "\n") { budget -> "$budget" }
 
@@ -16,7 +16,7 @@ object Utilities {
             .joinToString(separator = "\n") { entry -> "\t$entry" }
 
     @JvmStatic
-    fun formatListString(entriesToFormat: List<Entry>): String =
+    fun formatListStringEntries(entriesToFormat: List<Entry>): String =
         entriesToFormat
             .joinToString(separator = "\n") { entry -> "\t$entry" }
 }
