@@ -8,10 +8,15 @@ object Utilities {
     @JvmStatic
     fun formatListString(budgetsToFormat: ArrayList<Budget>): String =
         budgetsToFormat
-            .joinToString(separator = "\n ") { budget -> "$budget" }
+            .joinToString(separator = "\n") { budget -> "$budget" }
 
     @JvmStatic
     fun formatSetString(entriesToFormat: Set<Entry>): String =
+        entriesToFormat
+            .joinToString(separator = "\n") { entry -> "\t$entry" }
+
+    @JvmStatic
+    fun formatListString(entriesToFormat: List<Entry>): String =
         entriesToFormat
             .joinToString(separator = "\n") { entry -> "\t$entry" }
 }

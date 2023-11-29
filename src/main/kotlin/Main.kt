@@ -5,9 +5,7 @@ import utils.ScannerInput
 import utils.ScannerInput.readNextInt
 import utils.ScannerInput.readNextLine
 import java.lang.System.exit
-import persistence.Serializer
 import persistence.XMLSerializer
-import persistence.JSONSerializer
 import java.io.File
 import controllers.BudgetAPI
 
@@ -22,24 +20,24 @@ fun main(args: Array<String>) {
 fun mainMenu(): Int {
     return ScannerInput.readNextInt(
         """ 
-             > ----------------------------------
-             > |       Money Management App     |
-             > ----------------------------------
-             > | Budget Options                 |
-             > |   1) Create a Budget           |
-             > |   2) List all Budgets          |
-             > |   3) Update a Budget           |
-             > |   4) Delete a Budget           |
-             > ----------------------------------
-             > | Entry Options                  |
-             > |   5) Add Entry to Budget       |
-             > |   6) Delete an Entry           |
-             > |   7) Update an Entry           |
-             > ----------------------------------
-             > |   8) Save                      |
-             > |   9) Load                      |
-             > |   0) Exit                      |
-             > ----------------------------------
+             > ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+             > ┃       Money Management App     ┃
+             > ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+             > ┃ Budget Options                 ┃
+             > ┃   1) Create a Budget           ┃
+             > ┃   2) List all Budgets          ┃
+             > ┃   3) Update a Budget           ┃
+             > ┃   4) Delete a Budget           ┃
+             > ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+             > ┃ Entry Options                  ┃
+             > ┃   5) Add Entry to Budget       ┃
+             > ┃   6) Delete an Entry           ┃
+             > ┃   7) Update an Entry           ┃
+             > ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+             > ┃   8) Save                      ┃
+             > ┃   9) Load                      ┃
+             > ┃   0) Exit                      ┃
+             > ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
              > ==>> """.trimMargin(">")
     )
 }
@@ -227,3 +225,4 @@ private fun askUserToChooseEntry(budget: Budget): Entry? {
         return null
     }
 }
+
