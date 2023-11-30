@@ -31,7 +31,7 @@ data class Budget(
 
     fun listEntries() =
         if (entries.isEmpty()) {
-            "\tThere is currently no entries added!"
+            "┃ There is currently no entries added!"
         } else {
             Utilities.formatSetString(entries)
         }

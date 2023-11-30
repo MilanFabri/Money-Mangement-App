@@ -39,47 +39,47 @@ class BudgetAPI(serializerType: Serializer) {
             for (entry in budget.entries) {
                 val totalSpent = budget.entries.sumOf { it.amountSpent }
                 if (totalSpent >= budget.allocatedAmount) {
-                        budget.isBudgetClosed = true
-                    }
+                    budget.isBudgetClosed = true
                 }
             }
         }
-
-        fun updateBudget(id: Int, budget: Budget?): Boolean {
-            val foundBudget = findBudget(id)
-
-            if ((foundBudget != null) && (budget != null)) {
-                foundBudget.budgetID = budget.budgetID
-                foundBudget.budgetTitle = budget.budgetTitle
-                foundBudget.allocatedAmount = budget.allocatedAmount
-                return true
-            }
-
-            return false
-        }
-
-        fun listAllBudgets() =
-            if (budgets.isEmpty()) {
-                "There is currently no budgets stored!"
-            } else {
-                formatListString(budgets)
-            }
-
-        fun listActiveBudgets() =
-            if (numberOfActiveBudgets() == 0) "There is currently no active budgets stored!"
-            else formatListString(budgets.filter { budget -> !budget.isBudgetClosed })
-
-        fun listClosedBudgets() =
-            if (numberOfClosedBudgets() == 0) "There is currently no closed budgets stored!"
-            else formatListString(budgets.filter { budget -> budget.isBudgetClosed })
-
-        @Throws(Exception::class)
-        fun load() {
-            budgets = serializer.read() as ArrayList<Budget>
-        }
-
-        @Throws(Exception::class)
-        fun store() {
-            serializer.write(budgets)
-        }
     }
+
+    fun updateBudget(id: Int, budget: Budget?): Boolean {
+        val foundBudget = findBudget(id)
+
+        if ((foundBudget != null) && (budget != null)) {
+            foundBudget.budgetID = budget.budgetID
+            foundBudget.budgetTitle = budget.budgetTitle
+            foundBudget.allocatedAmount = budget.allocatedAmount
+            return true
+        }
+
+        return false
+    }
+
+    fun listAllBudgets() =
+        if (budgets.isEmpty()) {
+            "┃ There is currently no budgets stored!"
+        } else {
+            formatListString(budgets)
+        }
+
+    fun listActiveBudgets() =
+        if (numberOfActiveBudgets() == 0) "┃ There is currently no active budgets stored!"
+        else formatListString(budgets.filter { budget -> !budget.isBudgetClosed })
+
+    fun listClosedBudgets() =
+        if (numberOfClosedBudgets() == 0) "┃ There is currently no closed budgets stored!"
+        else formatListString(budgets.filter { budget -> budget.isBudgetClosed })
+
+    @Throws(Exception::class)
+    fun load() {
+        budgets = serializer.read() as ArrayList<Budget>
+    }
+
+    @Throws(Exception::class)
+    fun store() {
+        serializer.write(budgets)
+    }
+}
