@@ -18,28 +18,21 @@ fun main(args: Array<String>) {
 }
 
 fun mainMenu(): Int {
-    return ScannerInput.readNextInt(
+    return readNextInt(
         """ 
-             > ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-             > ┃       Money Management App     ┃
-             > ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
-             > ┃ Budget Options                 ┃
-             > ┃   1) Create a Budget           ┃
-             > ┃   2) List all Budgets          ┃
-             > ┃   3) Update a Budget           ┃
-             > ┃   4) Delete a Budget           ┃
-             > ┃   5) Close a Budget            ┃
-             > ┃   11) Auto Close Budgets       ┃
-             > ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
-             > ┃ Entry Options                  ┃
-             > ┃   6) Add Entry to Budget       ┃
-             > ┃   7) Delete an Entry           ┃
-             > ┃   8) Update an Entry           ┃
-             > ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
-             > ┃   9) Save                      ┃
-             > ┃   10) Load                     ┃
-             > ┃   0) Exit                      ┃
-             > ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+             >┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+             >┃ Money Management App      V4.0 ┃
+             >┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+             >┃ Menu:                          ┃
+             >┃   1) Budget Options            ┃
+             >┃   2) Entry Options             ┃
+             >┃   3) Listing Options           ┃
+             >┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+             >┃ System:                        ┃
+             >┃   8) Save                      ┃
+             >┃   9) Load                      ┃
+             >┃   0) Exit                      ┃
+             >┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
              > ==>> """.trimMargin(">")
     )
 }
@@ -48,35 +41,93 @@ fun runMenu() {
     do {
         val option = mainMenu()
         when (option) {
-            1 -> createBudget()
-            2 -> listActiveBudgets()
-            3 -> updateBudget()
-            4 -> deleteBudget()
-            5 -> closeBudget()
-            6 -> addEntry()
-            7 -> deleteEntry()
-            8 -> updateEntry()
-            11 -> autoClose()
-            9 -> save()
-            10 -> load()
+            1 -> budgetOptions()
+            2 -> entryOptions()
+            3 -> listOptions()
+            5 -> save()
+            6 -> load()
             0 -> exitApp()
-            else -> println("Invalid option entered: $option")
+            else -> println("┃ Invalid option entered: $option")
         }
     } while (true)
 }
 
+fun budgetOptions(){
+        val option = readNextInt(
+            """
+                  >┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+                  >┃         BUDGET OPTIONS         ┃
+                  >┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+                  >┃   1) Create new Budget         ┃
+                  >┃   2) Update a Budget           ┃
+                  >┃   3) Delete a Budget           ┃
+                  >┃   4) Close a Budget            ┃
+                  >┃   5) Auto Close Full Budgets   ┃
+                  >┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+         > ==▶ """.trimMargin(">"))
+
+        when (option) {
+            1 -> createBudget();
+            2 -> updateBudget();
+            3 -> deleteBudget();
+            4 -> closeBudget();
+            5 -> autoClose();
+            else -> println("┃ Invalid option entered: " + option);
+        }
+    }
+
+fun entryOptions(){
+    val option = readNextInt(
+        """
+                  >┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+                  >┃         ENTRY OPTIONS          ┃
+                  >┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+                  >┃   1) Add new Entry to Budget   ┃
+                  >┃   2) Delete an Entry           ┃
+                  >┃   3) Update an Entry           ┃
+                  >┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+         > ==▶ """.trimMargin(">"))
+
+    when (option) {
+        1 -> addEntry();
+        2 -> deleteEntry();
+        3 -> updateEntry();
+        else -> println("┃ Invalid option entered: " + option);
+    }
+}
+
+fun listOptions(){
+    val option = readNextInt(
+        """
+                  >┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+                  >┃         LISTING OPTIONS        ┃
+                  >┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+                  >┃   1) List All Budgets          ┃
+                  >┃   2) List Active Budgets       ┃
+                  >┃   3) List Closed Budgets       ┃
+                  >┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+         > ==▶ """.trimMargin(">"))
+
+    when (option) {
+        1 -> listBudgets();
+        2 -> listActiveBudgets();
+        3 -> listClosedBudgets();
+        else -> println("┃ Invalid option entered: " + option);
+    }
+}
+
 fun createBudget() {
     // logger.info { "createBudget() function invoked" }
-    val budgetTitle = ScannerInput.readNextLine("Enter the Title for your Budget: ")
-    val allocatedAmount = ScannerInput.readNextInt("Enter allocated amount to spend for your Budget: ")
+    val budgetTitle = readNextLine("┃ Enter the Title for your Budget: ")
+    val allocatedAmount = readNextInt("┃ Enter allocated amount to spend for your Budget: ")
 
     val isAdded =
         budgetAPI.addBudget(Budget(budgetID = 0, budgetTitle = budgetTitle, allocatedAmount = allocatedAmount))
 
     if (isAdded) {
-        println("Budget was created Successfully!")
+        println("┃ Budget was created Successfully!")
     } else {
-        println("Budget Creation Failed! Try again")
+        println("┃ Budget Creation Failed! Try again")
     }
 }
 
@@ -89,6 +140,10 @@ fun listActiveBudgets() {
     println(budgetAPI.listActiveBudgets())
 }
 
+fun listClosedBudgets() {
+    println(budgetAPI.listClosedBudgets())
+}
+
 fun autoClose() {
     budgetAPI.autoCloseBudget()
 }
@@ -97,18 +152,18 @@ fun updateBudget() {
     // logger.info { "updateBudget() function invoked" }
     listBudgets()
     if (budgetAPI.numberOfBudgets() > 0) {
-        val id = readNextInt("Enter the ID of the budget you wish to Update: ")
+        val id = readNextInt("┃ Enter the ID of the budget you wish to Update: ")
         if (budgetAPI.findBudget(id) != null) {
-            val budgetTitle = readNextLine("Enter a new Title for your budget: ")
-            val allocatedAmount = readNextInt("Enter a new Allocated Amount for your budget: ")
+            val budgetTitle = readNextLine("┃ Enter a new Title for your budget: ")
+            val allocatedAmount = readNextInt("┃ Enter a new Allocated Amount for your budget: ")
 
             if (budgetAPI.updateBudget(id, Budget(0, budgetTitle, allocatedAmount))) {
-                println("Budget was updated Successful!")
+                println("┃ Budget was updated Successful!")
             } else {
-                println("Budget update Failed! Try again")
+                println("┃ Budget update Failed! Try again")
             }
         } else {
-            println("There is currently no Budgets with that ID!")
+            println("┃ There is currently no Budgets with that ID!")
         }
     }
 }
@@ -116,12 +171,12 @@ fun updateBudget() {
 fun deleteBudget() {
     listBudgets()
     if (budgetAPI.numberOfBudgets() > 0) {
-        val id = readNextInt("Enter the ID of the Budget you wish to Delete: ")
+        val id = readNextInt("┃ Enter the ID of the Budget you wish to Delete: ")
         val budgetToDelete = budgetAPI.deleteBudget(id)
         if (budgetToDelete) {
-            println("Budget was deleted Successfully")
+            println("┃ Budget was deleted Successfully")
         } else {
-            println("Budget deletion Failed! Try again")
+            println("┃ Budget deletion Failed! Try again")
         }
     }
 }
@@ -129,11 +184,11 @@ fun deleteBudget() {
 fun closeBudget() {
     listActiveBudgets()
     if (budgetAPI.numberOfActiveBudgets() > 0) {
-        val id = readNextInt("Enter the ID of the Budget you wish to Close: ")
+        val id = readNextInt("┃ Enter the ID of the Budget you wish to Close: ")
         if (budgetAPI.closeBudget(id)) {
-            println("Budget was closed Successfully")
+            println("┃ Budget was closed Successfully")
         } else {
-            println("Budget closing Failed! Try again")
+            println("┃ Budget closing Failed! Try again")
         }
     }
 }
@@ -145,11 +200,11 @@ fun addEntry() {
         budget.addEntry(
             Entry(
                 entryID = 0,
-                entryDesc = readNextLine("\t Entry Description: "),
-                location = readNextLine("\t Location Spent: "),
-                dateSpent = readNextInt("\t Date Spent: "),
-                amountSpent = readNextInt("\t Amount Spent: "),
-                transactionType = readNextLine("\t How did you pay? :")
+                entryDesc = readNextLine("┃ Entry Description: "),
+                location = readNextLine("┃ Location Spent: "),
+                dateSpent = readNextInt("┃ Date Spent: "),
+                amountSpent = readNextInt("┃ Amount Spent: "),
+                transactionType = readNextLine("┃ Transaction Type?: ")
             )
         )
     }
@@ -162,9 +217,9 @@ fun deleteEntry() {
         if (entry != null) {
             val isDeleted = budget.deleteEntry(entry.entryID)
             if (isDeleted) {
-                println("Delete Successful!")
+                println("┃ Entry was deleted Successfully")
             } else {
-                println("Delete NOT Successful")
+                println("┃ Entry deletion Failed! Try again")
             }
         }
     }
@@ -175,11 +230,11 @@ fun updateEntry() {
     if (budget != null) {
         val entry: Entry? = askUserToChooseEntry(budget)
         if (entry != null) {
-            val newDesc = readNextLine("Enter a new Description for Entry: ")
-            val newAmountSpent = readNextInt("Enter a new amount spent: ")
-            val newDateSpent = readNextInt("Enter a new date spent: ")
-            val newLocation = readNextLine("Enter a new location: ")
-            val newTransactionType = readNextLine("Enter a new transaction type: ")
+            val newDesc = readNextLine("┃ Enter a new Description for Entry: ")
+            val newAmountSpent = readNextInt("┃ Enter a new amount spent: ")
+            val newDateSpent = readNextInt("┃ Enter a new date spent: ")
+            val newLocation = readNextLine("┃ Enter a new location: ")
+            val newTransactionType = readNextLine("┃ Enter a new transaction type: ")
             if (budget.updateEntry(
                     entry.entryID,
                     Entry(
@@ -192,12 +247,12 @@ fun updateEntry() {
                     )
                 )
             ) {
-                println("Entry was updated Successful!")
+                println("┃ Entry was updated Successful!")
             } else {
-                println("Entry update Failed! Try again")
+                println("┃ Entry update Failed! Try again")
             }
         } else {
-            println("There is currently no Entries with that ID!")
+            println("┃ There is currently no Entries with that ID!")
         }
     }
 }
@@ -211,7 +266,7 @@ fun save() {
     try {
         budgetAPI.store()
     } catch (e: Exception) {
-        System.err.println(" ┃ Error writing to file: $e")
+        System.err.println("┃ Error writing to file: $e")
     }
 }
 
@@ -219,22 +274,22 @@ fun load() {
     try {
         budgetAPI.load()
     } catch (e: Exception) {
-        System.err.println(" ┃ Error reading from file: $e")
+        System.err.println("┃ Error reading from file: $e")
     }
 }
 
 private fun askUserToChooseBudget(): Budget? {
     listBudgets()
     if (budgetAPI.numberOfActiveBudgets() > 0) {
-        val budget = budgetAPI.findBudget(readNextInt("\nEnter the ID of the budget you wish to select: "))
+        val budget = budgetAPI.findBudget(readNextInt("┃ Enter the ID of the budget you wish to select: "))
         if (budget != null) {
             if (budget.isBudgetClosed) {
-                println("This budget has already been closed")
+                println("┃ This budget has already been closed")
             } else {
                 return budget
             }
         } else {
-            println("The budget with that ID is not valid! Try again")
+            println("┃ The budget with that ID is not valid! Try again")
         }
     }
     return null
@@ -243,9 +298,9 @@ private fun askUserToChooseBudget(): Budget? {
 private fun askUserToChooseEntry(budget: Budget): Entry? {
     if (budget.numberOfEntries() > 0) {
         print(budget.listEntries())
-        return budget.findOne(readNextInt("\nEnter the ID of the entry you wish to select: "))
+        return budget.findOne(readNextInt("┃ Enter the ID of the entry you wish to select: "))
     } else {
-        println("There is no entries inside this Budget")
+        println("┃ There is no entries inside this Budget")
         return null
     }
 }
