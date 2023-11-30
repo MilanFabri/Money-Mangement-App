@@ -29,6 +29,7 @@ fun mainMenu(): Int {
              > ┃   3) Update a Budget           ┃
              > ┃   4) Delete a Budget           ┃
              > ┃   5) Close a Budget            ┃
+             > ┃   11) Auto Close Budgets       ┃
              > ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
              > ┃ Entry Options                  ┃
              > ┃   6) Add Entry to Budget       ┃
@@ -48,13 +49,14 @@ fun runMenu() {
         val option = mainMenu()
         when (option) {
             1 -> createBudget()
-            2 -> listBudgets()
+            2 -> listActiveBudgets()
             3 -> updateBudget()
             4 -> deleteBudget()
             5 -> closeBudget()
             6 -> addEntry()
             7 -> deleteEntry()
             8 -> updateEntry()
+            11 -> autoClose()
             9 -> save()
             10 -> load()
             0 -> exitApp()
@@ -85,6 +87,10 @@ fun listBudgets() {
 
 fun listActiveBudgets() {
     println(budgetAPI.listActiveBudgets())
+}
+
+fun autoClose() {
+    budgetAPI.autoCloseBudget()
 }
 
 fun updateBudget() {
@@ -219,7 +225,7 @@ fun load() {
 
 private fun askUserToChooseBudget(): Budget? {
     listBudgets()
-    if (budgetAPI.numberOfClosedBudgets() > 0) {
+    if (budgetAPI.numberOfActiveBudgets() > 0) {
         val budget = budgetAPI.findBudget(readNextInt("\nEnter the ID of the budget you wish to select: "))
         if (budget != null) {
             if (budget.isBudgetClosed) {

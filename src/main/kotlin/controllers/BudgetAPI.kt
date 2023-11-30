@@ -27,40 +27,51 @@ class BudgetAPI(serializerType: Serializer) {
 
     fun closeBudget(id: Int): Boolean {
         val foundBudget = findBudget(id)
-        if (( foundBudget != null) && (!foundBudget.isBudgetClosed)){
+        if ((foundBudget != null) && (!foundBudget.isBudgetClosed)) {
             foundBudget.isBudgetClosed = true
             return true
         }
         return false
     }
 
-    fun updateBudget(id: Int, budget: Budget?): Boolean {
-        val foundBudget = findBudget(id)
-
-        if ((foundBudget != null) && (budget != null)) {
-            foundBudget.budgetID = budget.budgetID
-            foundBudget.budgetTitle = budget.budgetTitle
-            foundBudget.allocatedAmount = budget.allocatedAmount
-            return true
+    fun autoCloseBudget() {
+        for (budget in budgets) {
+            for (entry in budget.entries) {
+                val totalSpent = budget.entries.sumOf { it.amountSpent }
+                if (totalSpent >= budget.allocatedAmount) {
+                        budget.isBudgetClosed = true
+                    }
+                }
+            }
         }
 
-        return false
-    }
+        fun updateBudget(id: Int, budget: Budget?): Boolean {
+            val foundBudget = findBudget(id)
 
-    fun listAllBudgets() =
-        if (budgets.isEmpty()) {
-            "There is currently no budgets stored!"
-        } else {
-            formatListString(budgets)
+            if ((foundBudget != null) && (budget != null)) {
+                foundBudget.budgetID = budget.budgetID
+                foundBudget.budgetTitle = budget.budgetTitle
+                foundBudget.allocatedAmount = budget.allocatedAmount
+                return true
+            }
+
+            return false
         }
 
-    fun listActiveBudgets() =
-        if (numberOfActiveBudgets() == 0) "There is currently no active budgets stored!"
-        else formatListString(budgets.filter { budget -> !budget.isBudgetClosed })
+        fun listAllBudgets() =
+            if (budgets.isEmpty()) {
+                "There is currently no budgets stored!"
+            } else {
+                formatListString(budgets)
+            }
 
-    fun listClosedBudgets() =
-        if (numberOfClosedBudgets() == 0) "There is currently no closed budgets stored!"
-        else formatListString(budgets.filter { budget -> budget.isBudgetClosed })
+        fun listActiveBudgets() =
+            if (numberOfActiveBudgets() == 0) "There is currently no active budgets stored!"
+            else formatListString(budgets.filter { budget -> !budget.isBudgetClosed })
+
+        fun listClosedBudgets() =
+            if (numberOfClosedBudgets() == 0) "There is currently no closed budgets stored!"
+            else formatListString(budgets.filter { budget -> budget.isBudgetClosed })
 
         @Throws(Exception::class)
         fun load() {

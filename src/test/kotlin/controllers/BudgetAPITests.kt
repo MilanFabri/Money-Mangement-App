@@ -29,7 +29,7 @@ class BudgetAPITests {
         groceries = Budget(2, "Groceries", 100, false)
         weeklyBudget = Budget(3, "Weekly Budget", 200, false)
 
-        firstEntry = Entry(1, "Entry One", "Online", 23, 53, "Card")
+        firstEntry = Entry(1, "Entry One", "Online", 23, 1000, "Card")
         secondEntry = Entry(2, "Entry Two", "Tramore", 20, 100, "Cash")
         thirdEntry = Entry(3, "Entry Three", "Dublin", 10, 225, "Card")
 
@@ -191,7 +191,7 @@ class BudgetAPITests {
         }
 
         @Test
-        fun `listActiveNotes returns active notes when ArrayList has active notes stored`() {
+        fun `listActiveBudgets returns active budgets when ArrayList has active budgets stored`() {
             assertEquals(3, populatedBudgets!!.numberOfActiveBudgets())
             val activeNotesString = populatedBudgets!!.listActiveBudgets().lowercase()
             holidayBudget = Budget(1, "Holiday Budget", 1000, false)
@@ -204,16 +204,16 @@ class BudgetAPITests {
     inner class ListClosedBudgets{
 
         @Test
-        fun `listArchivedNotes returns no archived notes when ArrayList is empty`() {
-            Assertions.assertEquals(0, emptyBudgets!!.numberOfClosedBudgets())
+        fun `listClosedBudgets returns no closed budgets when ArrayList is empty`() {
+            assertEquals(0, emptyBudgets!!.numberOfClosedBudgets())
             assertTrue(
                 emptyBudgets!!.listClosedBudgets().contains("There is currently no closed budgets stored!")
             )
         }
 
         @Test
-        fun `listArchivedNotes returns archived notes when ArrayList has archived notes stored`() {
-            Assertions.assertEquals(0, populatedBudgets!!.numberOfClosedBudgets())
+        fun `listClosedBudgets returns close budgets when ArrayList has closed budgets stored`() {
+            assertEquals(0, populatedBudgets!!.numberOfClosedBudgets())
             val closedBudgetsString = populatedBudgets!!.listClosedBudgets().lowercase(Locale.getDefault())
             holidayBudget = Budget(1, "Holiday Budget", 1000, false)
             groceries = Budget(2, "Groceries", 100, false)
