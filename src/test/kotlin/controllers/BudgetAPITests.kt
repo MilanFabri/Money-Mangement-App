@@ -20,7 +20,6 @@ class BudgetAPITests {
     private var thirdEntry: Entry? = null
     private var populatedBudgets: BudgetAPI? = BudgetAPI(XMLSerializer(File("budgets.xml")))
     private var populatedEntry: Budget? = Budget(1, "testing", 100)
-    private var Entries: Budget? = null
     private var emptyBudgets: BudgetAPI? = BudgetAPI(XMLSerializer(File("budgets.xml")))
 
     @BeforeEach
@@ -29,9 +28,9 @@ class BudgetAPITests {
         groceries = Budget(2, "Groceries", 100, false)
         weeklyBudget = Budget(3, "Weekly Budget", 200, false)
 
-        firstEntry = Entry(1, "Entry One", "Online", 23, 1000, "Card")
-        secondEntry = Entry(2, "Entry Two", "Tramore", 20, 100, "Cash")
-        thirdEntry = Entry(3, "Entry Three", "Dublin", 10, 225, "Card")
+        firstEntry = Entry(1, "Entry One", "Online", "1/12/23", 1000, "Card")
+        secondEntry = Entry(2, "Entry Two", "Tramore", "2/12/23", 100, "Cash")
+        thirdEntry = Entry(3, "Entry Three", "Dublin", "3/12/23", 225, "Card")
 
         populatedBudgets!!.addBudget(holidayBudget!!)
         populatedBudgets!!.addBudget(groceries!!)
@@ -135,7 +134,7 @@ class BudgetAPITests {
     inner class AddingEntries {
         @Test
         fun `adding an Entry`() {
-            val newEntry = Entry(1, "Entry One", "Online", 23, 53, "Card")
+            val newEntry = Entry(1, "Entry One", "Online", "1/12/23", 53, "Card")
             assertEquals(3, populatedEntry!!.numberOfEntries())
             assertTrue(populatedEntry!!.addEntry(newEntry))
             assertEquals(4, populatedEntry!!.numberOfEntries())
@@ -166,8 +165,8 @@ class BudgetAPITests {
     inner class UpdatingEntries {
         @Test
         fun `updating a Entry that does not exist returns false`() {
-            assertFalse(populatedEntry!!.updateEntry(6, Entry(1, "Entry One Update", "Online", 23, 53, "Card")))
-            assertFalse(populatedEntry!!.updateEntry(-1, Entry(1, "Entry Two Update", "Tramore", 23, 163, "Card")))
+            assertFalse(populatedEntry!!.updateEntry(6, Entry(1, "Entry One Update", "Online", "1/12/23", 53, "Card")))
+            assertFalse(populatedEntry!!.updateEntry(-1, Entry(1, "Entry Two Update", "Tramore", "2/12/23", 163, "Card")))
         }
 
         @Test
@@ -175,7 +174,7 @@ class BudgetAPITests {
             assertEquals(firstEntry, populatedEntry!!.findOne(1))
             assertEquals("Entry One", populatedEntry!!.findOne(1)!!.entryDesc)
 
-            assertTrue(populatedEntry!!.updateEntry(1, Entry(1, "New Entry One", "Waterford", 23, 150, "Cash")))
+            assertTrue(populatedEntry!!.updateEntry(1, Entry(1, "New Entry One", "Waterford", "1/12/23", 150, "Cash")))
             assertEquals("New Entry One", populatedEntry!!.findOne(1)!!.entryDesc)
         }
     }
@@ -193,7 +192,6 @@ class BudgetAPITests {
         @Test
         fun `listActiveBudgets returns active budgets when ArrayList has active budgets stored`() {
             assertEquals(3, populatedBudgets!!.numberOfActiveBudgets())
-            val activeNotesString = populatedBudgets!!.listActiveBudgets().lowercase()
             holidayBudget = Budget(1, "Holiday Budget", 1000, false)
             groceries = Budget(2, "Groceries", 100, false)
             weeklyBudget = Budget(3, "Weekly Budget", 200, false)
@@ -214,7 +212,6 @@ class BudgetAPITests {
         @Test
         fun `listClosedBudgets returns close budgets when ArrayList has closed budgets stored`() {
             assertEquals(0, populatedBudgets!!.numberOfClosedBudgets())
-            val closedBudgetsString = populatedBudgets!!.listClosedBudgets().lowercase(Locale.getDefault())
             holidayBudget = Budget(1, "Holiday Budget", 1000, false)
             groceries = Budget(2, "Groceries", 100, false)
             weeklyBudget = Budget(3, "Weekly Budget", 200, false)

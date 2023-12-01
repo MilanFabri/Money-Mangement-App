@@ -16,7 +16,10 @@ object Utilities {
             .joinToString(separator = "\n") { entry -> "\t$entry" }
 
     @JvmStatic
-    fun formatListStringEntries(entriesToFormat: List<Entry>): String =
-        entriesToFormat
-            .joinToString(separator = "\n") { entry -> "\t$entry" }
+    fun validDate(dateToCheck: String): Boolean {
+        if(dateToCheck.contains("/")){
+            return true
+        }
+        return false
+    }
 }
