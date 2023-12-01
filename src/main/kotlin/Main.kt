@@ -112,6 +112,7 @@ fun listOptions(){
         1 -> listBudgets();
         2 -> listActiveBudgets();
         3 -> listClosedBudgets();
+        4 -> listEntriesByMostSpent();
         else -> println("┃ Invalid option entered: " + option);
     }
 }
@@ -142,6 +143,10 @@ fun listActiveBudgets() {
 
 fun listClosedBudgets() {
     println(budgetAPI.listClosedBudgets())
+}
+
+fun listEntriesByMostSpent(){
+    println(budgetAPI.listByMostSpent())
 }
 
 fun autoClose() {

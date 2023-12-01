@@ -4,7 +4,6 @@ import models.Budget
 import models.Entry
 import utils.Utilities.formatListString
 import persistence.Serializer
-import utils.Utilities
 
 class BudgetAPI(serializerType: Serializer) {
     private var serializer: Serializer = serializerType
@@ -72,6 +71,16 @@ class BudgetAPI(serializerType: Serializer) {
     fun listClosedBudgets() =
         if (numberOfClosedBudgets() == 0) "┃ There is currently no closed budgets stored!"
         else formatListString(budgets.filter { budget -> budget.isBudgetClosed })
+
+    fun listByMostSpent(): String =
+        if (numberOfActiveBudgets() == 0) "┃ There is currently no active budgets stored!"
+        else {
+            var listByMostSpent = ""
+            for (budget in budgets) {
+                listByMostSpent += budget.budgetTitle + " ┃\n " + budget.entries.sortedByDescending { it.amountSpent } + "\n"
+            }
+            listByMostSpent
+        }
 
     @Throws(Exception::class)
     fun load() {
