@@ -77,7 +77,7 @@ class BudgetAPITests {
         @Test
         fun `listAllBudgets returns No Budgets Stored message when ArrayList is empty`() {
             assertEquals(0, emptyBudgets!!.numberOfBudgets())
-            assertTrue(emptyBudgets!!.listAllBudgets().lowercase().contains("no budgets"))
+            assertTrue(emptyBudgets!!.listAllBudgets().contains("┃ There is currently no budgets stored!"))
         }
 
         @Test
@@ -215,6 +215,24 @@ class BudgetAPITests {
             holidayBudget = Budget(1, "Holiday Budget", 1000, false)
             groceries = Budget(2, "Groceries", 100, false)
             weeklyBudget = Budget(3, "Weekly Budget", 200, false)
+        }
+    }
+
+    @Nested
+    inner class ListingByMostSpent {
+        @Test
+        fun `ListingByMostSpent returns No Budgets Stored message when ArrayList is empty`() {
+            assertEquals(0, emptyBudgets!!.numberOfBudgets())
+            assertTrue(emptyBudgets!!.listByMostSpent().contains("┃ There is currently no active budgets stored!"))
+        }
+
+        @Test
+        fun `ListingByMostSpent returns Budgets when ArrayList has Budgets stored`() {
+            assertEquals(3, populatedBudgets!!.numberOfBudgets())
+            val budgetsString = populatedBudgets!!.listByMostSpent().lowercase()
+            assertTrue(budgetsString.contains("holiday budget"))
+            assertTrue(budgetsString.contains("groceries"))
+            assertTrue(budgetsString.contains("weekly budget"))
         }
     }
 
