@@ -1,13 +1,13 @@
 import models.Budget
 import models.Entry
 import mu.KotlinLogging
-import utils.ScannerInput
 import utils.ScannerInput.readNextInt
 import utils.ScannerInput.readNextLine
 import java.lang.System.exit
 import persistence.XMLSerializer
 import java.io.File
 import controllers.BudgetAPI
+import utils.Validate.isValidDate
 
 private val logger = KotlinLogging.logger {}
 private val budgetAPI = BudgetAPI(XMLSerializer(File("budgets.xml")))
@@ -202,7 +202,7 @@ fun addEntry() {
                 entryID = 0,
                 entryDesc = readNextLine("┃ Entry Description: "),
                 location = readNextLine("┃ Location Spent: "),
-                dateSpent = readNextInt("┃ Date Spent: "),
+                dateSpent = isValidDate("┃ Date Spent: "),
                 amountSpent = readNextInt("┃ Amount Spent: "),
                 transactionType = readNextLine("┃ Transaction Type?: ")
             )
@@ -232,7 +232,7 @@ fun updateEntry() {
         if (entry != null) {
             val newDesc = readNextLine("┃ Enter a new Description for Entry: ")
             val newAmountSpent = readNextInt("┃ Enter a new amount spent: ")
-            val newDateSpent = readNextInt("┃ Enter a new date spent: ")
+            val newDateSpent = readNextLine("┃ Enter a new date spent: ")
             val newLocation = readNextLine("┃ Enter a new location: ")
             val newTransactionType = readNextLine("┃ Enter a new transaction type: ")
             if (budget.updateEntry(
