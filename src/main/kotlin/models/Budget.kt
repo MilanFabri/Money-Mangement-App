@@ -8,6 +8,7 @@ data class Budget(
     var budgetTitle: String,
     var allocatedAmount: Int,
     var isBudgetClosed: Boolean = false,
+    var isBudgetFull: Boolean = false,
     var entries: MutableSet<Entry> = mutableSetOf()
 ) {
 

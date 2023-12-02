@@ -24,9 +24,9 @@ class BudgetAPITests {
 
     @BeforeEach
     fun setup() {
-        holidayBudget = Budget(1, "Holiday Budget", 1000, false)
-        groceries = Budget(2, "Groceries", 100, false)
-        weeklyBudget = Budget(3, "Weekly Budget", 200, false)
+        holidayBudget = Budget(1, "Holiday Budget", 1000, false, false)
+        groceries = Budget(2, "Groceries", 100, false, false)
+        weeklyBudget = Budget(3, "Weekly Budget", 200, false, false)
 
         firstEntry = Entry(1, "Entry One", "Online", "1/12/23", 1000, "Card")
         secondEntry = Entry(2, "Entry Two", "Tramore", "2/12/23", 100, "Cash")
@@ -212,8 +212,8 @@ class BudgetAPITests {
         @Test
         fun `listClosedBudgets returns close budgets when ArrayList has closed budgets stored`() {
             assertEquals(0, populatedBudgets!!.numberOfClosedBudgets())
-            holidayBudget = Budget(1, "Holiday Budget", 1000, false)
-            groceries = Budget(2, "Groceries", 100, false)
+            holidayBudget = Budget(1, "Holiday Budget", 1000, true)
+            groceries = Budget(2, "Groceries", 100, true)
             weeklyBudget = Budget(3, "Weekly Budget", 200, false)
         }
     }
@@ -233,6 +233,26 @@ class BudgetAPITests {
             assertTrue(budgetsString.contains("holiday budget"))
             assertTrue(budgetsString.contains("groceries"))
             assertTrue(budgetsString.contains("weekly budget"))
+        }
+    }
+
+    @Nested
+    inner class ListFullBudgets{
+
+        @Test
+        fun `listFullBudgets returns no full budgets when ArrayList is empty`() {
+            assertEquals(0, emptyBudgets!!.numberOfFullBudgets())
+            assertTrue(
+                emptyBudgets!!.listFullBudgets().contains("┃ There is currently no full budgets stored!")
+            )
+        }
+
+        @Test
+        fun `listFullBudgets returns full budgets when ArrayList has full budgets stored`() {
+            assertEquals(0, populatedBudgets!!.numberOfFullBudgets())
+            holidayBudget = Budget(1, "Holiday Budget", 1000, false, true)
+            groceries = Budget(2, "Groceries", 100, false, false)
+            weeklyBudget = Budget(3, "Weekly Budget", 200, false, true)
         }
     }
 

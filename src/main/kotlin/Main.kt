@@ -99,13 +99,15 @@ fun entryOptions(){
 fun listOptions(){
     val option = readNextInt(
         """
-                  >┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-                  >┃         LISTING OPTIONS        ┃
-                  >┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
-                  >┃   1) List All Budgets          ┃
-                  >┃   2) List Active Budgets       ┃
-                  >┃   3) List Closed Budgets       ┃
-                  >┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+                  >┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+                  >┃          LISTING OPTIONS          ┃
+                  >┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+                  >┃   1) List All Budgets             ┃
+                  >┃   2) List Active Budgets          ┃
+                  >┃   3) List Closed Budgets          ┃
+                  >┃   4) List Entries by Amount Spent ┃
+                  >┃   5) List full Budgets            ┃
+                  >┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
          > ==▶ """.trimMargin(">"))
 
     when (option) {
@@ -113,6 +115,7 @@ fun listOptions(){
         2 -> listActiveBudgets();
         3 -> listClosedBudgets();
         4 -> listEntriesByMostSpent();
+        5 -> listFullBudgets();
         else -> println("┃ Invalid option entered: " + option);
     }
 }
@@ -147,6 +150,11 @@ fun listClosedBudgets() {
 
 fun listEntriesByMostSpent(){
     println(budgetAPI.listByMostSpent())
+}
+
+fun listFullBudgets(){
+    budgetAPI.fullBudget()
+    println(budgetAPI.listFullBudgets())
 }
 
 fun autoClose() {
