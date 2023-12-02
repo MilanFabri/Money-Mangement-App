@@ -5,6 +5,7 @@ import models.Entry
 import org.junit.jupiter.api.*
 import persistence.JSONSerializer
 import persistence.XMLSerializer
+import searchEntriesByLocation
 import java.io.File
 import java.util.*
 import kotlin.test.assertEquals
@@ -20,6 +21,7 @@ class BudgetAPITests {
     private var thirdEntry: Entry? = null
     private var populatedBudgets: BudgetAPI? = BudgetAPI(XMLSerializer(File("budgets.xml")))
     private var populatedEntry: Budget? = Budget(1, "testing", 100)
+    private var emptyEntry: BudgetAPI? = null
     private var emptyBudgets: BudgetAPI? = BudgetAPI(XMLSerializer(File("budgets.xml")))
 
     @BeforeEach
@@ -49,6 +51,7 @@ class BudgetAPITests {
         populatedBudgets = null
         emptyBudgets = null
         populatedEntry = null
+        emptyEntry = null
     }
 
     @Nested
@@ -269,6 +272,26 @@ class BudgetAPITests {
         fun `closing a Budget that exists closes and returns closed object`() {
             assertTrue(populatedBudgets!!.closeBudget(1))
             assertEquals(1, populatedBudgets!!.numberOfClosedBudgets())
+        }
+    }
+
+    @Nested
+    inner class searchMethods {
+        @Test
+        fun `search entries by county returns entries when entries with that location exist`(){
+            Assertions.assertEquals(3, populatedEntry!!.numberOfEntries())
+
+            var searchResults = populatedBudgets!!.searchEntriesByLocation("Dublin")
+            assertTrue(searchResults.contains("Dublin"))
+            assertFalse(searchResults.contains("Waterford"))
+
+            searchResults = populatedBudgets!!.searchEntriesByLocation("Tramore")
+            assertTrue(searchResults.contains("Tramore"))
+            assertFalse(searchResults.contains("Galway"))
+
+            searchResults = populatedBudgets!!.searchEntriesByLocation("Online")
+            assertTrue(searchResults.contains("Online"))
+            assertFalse(searchResults.contains("Cork"))
         }
     }
 
