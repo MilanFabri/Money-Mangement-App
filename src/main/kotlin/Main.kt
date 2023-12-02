@@ -52,9 +52,9 @@ fun runMenu() {
     } while (true)
 }
 
-fun budgetOptions(){
-        val option = readNextInt(
-            """
+fun budgetOptions() {
+    val option = readNextInt(
+        """
                   >┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
                   >┃         BUDGET OPTIONS         ┃
                   >┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
@@ -64,19 +64,20 @@ fun budgetOptions(){
                   >┃   4) Close a Budget            ┃
                   >┃   5) Auto Close Full Budgets   ┃
                   >┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-         > ==▶ """.trimMargin(">"))
+         > ==▶ """.trimMargin(">")
+    )
 
-        when (option) {
-            1 -> createBudget();
-            2 -> updateBudget();
-            3 -> deleteBudget();
-            4 -> closeBudget();
-            5 -> autoClose();
-            else -> println("┃ Invalid option entered: " + option);
-        }
+    when (option) {
+        1 -> createBudget();
+        2 -> updateBudget();
+        3 -> deleteBudget();
+        4 -> closeBudget();
+        5 -> autoClose();
+        else -> println("┃ Invalid option entered: " + option);
     }
+}
 
-fun entryOptions(){
+fun entryOptions() {
     val option = readNextInt(
         """
                   >┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -86,7 +87,8 @@ fun entryOptions(){
                   >┃   2) Delete an Entry           ┃
                   >┃   3) Update an Entry           ┃
                   >┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-         > ==▶ """.trimMargin(">"))
+         > ==▶ """.trimMargin(">")
+    )
 
     when (option) {
         1 -> addEntry();
@@ -96,7 +98,7 @@ fun entryOptions(){
     }
 }
 
-fun listOptions(){
+fun listOptions() {
     val option = readNextInt(
         """
                   >┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -107,8 +109,10 @@ fun listOptions(){
                   >┃   3) List Closed Budgets          ┃
                   >┃   4) List Entries by Amount Spent ┃
                   >┃   5) List full Budgets            ┃
+                  >┃   6) Search Entry by Location     ┃
                   >┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-         > ==▶ """.trimMargin(">"))
+         > ==▶ """.trimMargin(">")
+    )
 
     when (option) {
         1 -> listBudgets();
@@ -116,6 +120,7 @@ fun listOptions(){
         3 -> listClosedBudgets();
         4 -> listEntriesByMostSpent();
         5 -> listFullBudgets();
+        6 -> searchEntriesByLocation();
         else -> println("┃ Invalid option entered: " + option);
     }
 }
@@ -148,13 +153,23 @@ fun listClosedBudgets() {
     println(budgetAPI.listClosedBudgets())
 }
 
-fun listEntriesByMostSpent(){
+fun listEntriesByMostSpent() {
     println(budgetAPI.listByMostSpent())
 }
 
-fun listFullBudgets(){
+fun listFullBudgets() {
     budgetAPI.fullBudget()
     println(budgetAPI.listFullBudgets())
+}
+
+fun searchEntriesByLocation() {
+    val searchLocation = readNextLine("┃ Enter the entry location to search by: ")
+    val searchResults = budgetAPI.searchEntriesByLocation(searchLocation)
+    if (searchResults.isEmpty()) {
+        println("┃ There is no entry with that location currently stored")
+    } else {
+        println(searchResults)
+    }
 }
 
 fun autoClose() {
@@ -163,7 +178,7 @@ fun autoClose() {
 
 fun updateBudget() {
     // logger.info { "updateBudget() function invoked" }
-    listBudgets()
+    listActiveBudgets()
     if (budgetAPI.numberOfBudgets() > 0) {
         val id = readNextInt("┃ Enter the ID of the budget you wish to Update: ")
         if (budgetAPI.findBudget(id) != null) {
@@ -208,18 +223,23 @@ fun closeBudget() {
 
 fun addEntry() {
     // logger.info { "addEntry() function invoked" }
+    budgetAPI.fullBudget()
     val budget: Budget? = askUserToChooseBudget()
     if (budget != null) {
-        budget.addEntry(
-            Entry(
-                entryID = 0,
-                entryDesc = readNextLine("┃ Entry Description: "),
-                location = readNextLine("┃ Location Spent: "),
-                dateSpent = isValidDate("┃ Date Spent: "),
-                amountSpent = readNextInt("┃ Amount Spent: "),
-                transactionType = readNextLine("┃ Transaction Type?: ")
+        if (budget.isBudgetFull == false) {
+            budget.addEntry(
+                Entry(
+                    entryID = 0,
+                    entryDesc = readNextLine("┃ Entry Description: "),
+                    location = readNextLine("┃ Location Spent: "),
+                    dateSpent = isValidDate("┃ Date Spent: "),
+                    amountSpent = readNextInt("┃ Amount Spent: "),
+                    transactionType = readNextLine("┃ Transaction Type?: ")
+                )
             )
-        )
+        }else{
+            println("This budget is already full, delete an entry or close the budget")
+        }
     }
 }
 

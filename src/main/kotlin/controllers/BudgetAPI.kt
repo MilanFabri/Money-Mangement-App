@@ -98,13 +98,29 @@ class BudgetAPI(serializerType: Serializer) {
         if (numberOfFullBudgets() == 0) "┃ There is currently no full budgets stored!"
         else formatListString(budgets.filter { budget -> budget.isBudgetFull })
 
-    @Throws(Exception::class)
-    fun load() {
-        budgets = serializer.read() as ArrayList<Budget>
+    fun searchEntriesByLocation(searchString: String): String {
+        return if (numberOfBudgets() == 0) "┃ There is currently no active budgets stored!"
+        else {
+            var listOfEntries = ""
+            for (budget in budgets) {
+                for (entry in budget.entries) {
+                    if (entry.location.contains(searchString, ignoreCase = true)) {
+                        listOfEntries += "${budget.budgetTitle}: \n\t${entry}\n"
+                    }
+                }
+            }
+            if (listOfEntries == "") "┃ There is currently no entry with this location: $searchString"
+            else listOfEntries
+        }
     }
 
-    @Throws(Exception::class)
-    fun store() {
-        serializer.write(budgets)
-    }
+@Throws(Exception::class)
+fun load() {
+    budgets = serializer.read() as ArrayList<Budget>
+}
+
+@Throws(Exception::class)
+fun store() {
+    serializer.write(budgets)
+}
 }
