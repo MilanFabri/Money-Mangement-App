@@ -1,5 +1,6 @@
 package utils
 
+import com.sun.org.apache.xpath.internal.operations.Bool
 import models.Budget
 import models.Entry
 
@@ -17,9 +18,11 @@ object Utilities {
 
     @JvmStatic
     fun validDate(dateToCheck: String): Boolean {
-        if(dateToCheck.contains("/")){
+        if (dateToCheck.contains("/")) {
             return true
         }
         return false
     }
 }
+
+

@@ -12,6 +12,7 @@ class BudgetAPI(serializerType: Serializer) {
     fun findBudget(budgetID: Int) = budgets.find { budget -> budget.budgetID == budgetID }
     fun numberOfBudgets() = budgets.size
     fun numberOfClosedBudgets(): Int = budgets.count { budget: Budget -> budget.isBudgetClosed }
+    fun numberOfFullBudgets(): Int = budgets.count { budget: Budget -> budget.isBudgetFull }
     fun numberOfActiveBudgets(): Int = budgets.count { budget: Budget -> !budget.isBudgetClosed }
 
     private var lastId = 1
@@ -81,6 +82,21 @@ class BudgetAPI(serializerType: Serializer) {
             }
             listByMostSpent
         }
+
+    fun fullBudget() {
+        for (budget in budgets) {
+            for (entry in budget.entries) {
+                val totalSpent = budget.entries.sumOf { it.amountSpent }
+                if (totalSpent >= budget.allocatedAmount) {
+                    budget.isBudgetFull = true
+                }
+            }
+        }
+    }
+
+    fun listFullBudgets() =
+        if (numberOfFullBudgets() == 0) "┃ There is currently no full budgets stored!"
+        else formatListString(budgets.filter { budget -> budget.isBudgetFull })
 
     @Throws(Exception::class)
     fun load() {
