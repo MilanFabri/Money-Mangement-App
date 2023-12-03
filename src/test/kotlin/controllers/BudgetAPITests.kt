@@ -2,15 +2,18 @@ package controllers
 
 import models.Budget
 import models.Entry
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import persistence.JSONSerializer
 import persistence.XMLSerializer
-import searchEntriesByLocation
 import java.io.File
-import java.util.*
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+
 class BudgetAPITests {
 
     private var holidayBudget: Budget? = null
@@ -169,7 +172,12 @@ class BudgetAPITests {
         @Test
         fun `updating a Entry that does not exist returns false`() {
             assertFalse(populatedEntry!!.updateEntry(6, Entry(1, "Entry One Update", "Online", "1/12/23", 53, "Card")))
-            assertFalse(populatedEntry!!.updateEntry(-1, Entry(1, "Entry Two Update", "Tramore", "2/12/23", 163, "Card")))
+            assertFalse(
+                populatedEntry!!.updateEntry(
+                    -1,
+                    Entry(1, "Entry Two Update", "Tramore", "2/12/23", 163, "Card")
+                )
+            )
         }
 
         @Test
@@ -202,7 +210,7 @@ class BudgetAPITests {
     }
 
     @Nested
-    inner class ListClosedBudgets{
+    inner class ListClosedBudgets {
 
         @Test
         fun `listClosedBudgets returns no closed budgets when ArrayList is empty`() {
@@ -236,7 +244,7 @@ class BudgetAPITests {
     }
 
     @Nested
-    inner class ListFullBudgets{
+    inner class ListFullBudgets {
 
         @Test
         fun `listFullBudgets returns no full budgets when ArrayList is empty`() {
@@ -298,7 +306,7 @@ class BudgetAPITests {
     @Nested
     inner class searchMethods {
         @Test
-        fun `search entries by county returns entries when entries with that location exist`(){
+        fun `search entries by county returns entries when entries with that location exist`() {
             Assertions.assertEquals(3, populatedEntry!!.numberOfEntries())
 
             var searchResults = populatedBudgets!!.searchEntriesByLocation("Dublin")
@@ -312,6 +320,34 @@ class BudgetAPITests {
             searchResults = populatedBudgets!!.searchEntriesByLocation("Online")
             assertTrue(searchResults.contains("Online"))
             assertFalse(searchResults.contains("Cork"))
+        }
+
+        @Test
+        fun `search budgets by title returns no budgets when no budgets with that title exist`() {
+            Assertions.assertEquals(3, populatedBudgets!!.numberOfBudgets())
+            val searchResults = populatedBudgets!!.searchByTitle("No results Expected")
+            assertTrue(searchResults.isEmpty())
+
+            assertEquals(0, emptyBudgets!!.numberOfBudgets())
+            assertTrue(emptyBudgets!!.searchByTitle("").isEmpty())
+
+        }
+
+        @Test
+        fun `search budgets by title returns budgets whe budgets with that title exist`() {
+            Assertions.assertEquals(3, populatedBudgets!!.numberOfBudgets())
+
+            var searchResults = populatedBudgets!!.searchByTitle("Holiday Budget")
+            assertTrue(searchResults.contains("Holiday Budget"))
+            assertFalse(searchResults.contains("Test"))
+
+            searchResults = populatedBudgets!!.searchByTitle("Groceries")
+            assertTrue(searchResults.contains("Groceries"))
+            assertFalse(searchResults.contains("Shopping"))
+
+            searchResults = populatedBudgets!!.searchByTitle("Weekly Budget")
+            assertTrue(searchResults.contains("Weekly Budget"))
+            assertFalse(searchResults.contains("Food"))
         }
     }
 
@@ -355,8 +391,8 @@ class BudgetAPITests {
             val loadedBudgets = BudgetAPI(XMLSerializer(File("budgets.xml")))
             loadedBudgets.load()
 
-            Assertions.assertEquals(0, storingBudgets.numberOfBudgets())
-            Assertions.assertEquals(0, loadedBudgets.numberOfBudgets())
+            assertEquals(0, storingBudgets.numberOfBudgets())
+            assertEquals(0, loadedBudgets.numberOfBudgets())
             assertEquals(storingBudgets.numberOfBudgets(), loadedBudgets.numberOfBudgets())
         }
 
@@ -371,8 +407,8 @@ class BudgetAPITests {
             val loadedBudgets = BudgetAPI(XMLSerializer(File("budgets.xml")))
             loadedBudgets.load()
 
-            Assertions.assertEquals(3, storingBudgets.numberOfBudgets())
-            Assertions.assertEquals(3, loadedBudgets.numberOfBudgets())
+            assertEquals(3, storingBudgets.numberOfBudgets())
+            assertEquals(3, loadedBudgets.numberOfBudgets())
             assertEquals(storingBudgets.numberOfBudgets(), loadedBudgets.numberOfBudgets())
             assertEquals(storingBudgets.findBudget(1), loadedBudgets.findBudget(1))
             assertEquals(storingBudgets.findBudget(2), loadedBudgets.findBudget(2))
@@ -387,8 +423,8 @@ class BudgetAPITests {
             val loadedBudgets = BudgetAPI(JSONSerializer(File("budgets.json")))
             loadedBudgets.load()
 
-            Assertions.assertEquals(0, storingBudgets.numberOfBudgets())
-            Assertions.assertEquals(0, loadedBudgets.numberOfBudgets())
+            assertEquals(0, storingBudgets.numberOfBudgets())
+            assertEquals(0, loadedBudgets.numberOfBudgets())
             assertEquals(storingBudgets.numberOfBudgets(), loadedBudgets.numberOfBudgets())
         }
 
@@ -403,8 +439,8 @@ class BudgetAPITests {
             val loadedBudgets = BudgetAPI(JSONSerializer(File("budgets.json")))
             loadedBudgets.load()
 
-            Assertions.assertEquals(3, storingBudgets.numberOfBudgets())
-            Assertions.assertEquals(3, loadedBudgets.numberOfBudgets())
+            assertEquals(3, storingBudgets.numberOfBudgets())
+            assertEquals(3, loadedBudgets.numberOfBudgets())
             assertEquals(storingBudgets.numberOfBudgets(), loadedBudgets.numberOfBudgets())
             assertEquals(storingBudgets.findBudget(1), loadedBudgets.findBudget(1))
             assertEquals(storingBudgets.findBudget(2), loadedBudgets.findBudget(2))

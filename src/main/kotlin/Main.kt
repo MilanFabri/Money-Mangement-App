@@ -7,11 +7,12 @@ import java.lang.System.exit
 import persistence.XMLSerializer
 import java.io.File
 import controllers.BudgetAPI
+import persistence.JSONSerializer
 import utils.Validate.isValidDate
 
 private val logger = KotlinLogging.logger {}
 private val budgetAPI = BudgetAPI(XMLSerializer(File("budgets.xml")))
-//private val budgetAPI = BudgetAPI(JSONSerializer(File("budgets.json")))
+// private val budgetAPI = BudgetAPI(JSONSerializer(File("budgets.json")))
 
 fun main(args: Array<String>) {
     runMenu()
@@ -27,10 +28,11 @@ fun mainMenu(): Int {
              >┃   1) Budget Options            ┃
              >┃   2) Entry Options             ┃
              >┃   3) Listing Options           ┃
+             >┃   4) Report Options            ┃
              >┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
              >┃ System:                        ┃
-             >┃   8) Save                      ┃
-             >┃   9) Load                      ┃
+             >┃   5) Save                      ┃
+             >┃   6) Load                      ┃
              >┃   0) Exit                      ┃
              >┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
              > ==>> """.trimMargin(">")
@@ -44,6 +46,7 @@ fun runMenu() {
             1 -> budgetOptions()
             2 -> entryOptions()
             3 -> listOptions()
+            4 -> reportOptions()
             5 -> save()
             6 -> load()
             0 -> exitApp()
@@ -68,12 +71,12 @@ fun budgetOptions() {
     )
 
     when (option) {
-        1 -> createBudget();
-        2 -> updateBudget();
-        3 -> deleteBudget();
-        4 -> closeBudget();
-        5 -> autoClose();
-        else -> println("┃ Invalid option entered: " + option);
+        1 -> createBudget()
+        2 -> updateBudget()
+        3 -> deleteBudget()
+        4 -> closeBudget()
+        5 -> autoClose()
+        else -> println("┃ Invalid option entered: " + option)
     }
 }
 
@@ -91,10 +94,10 @@ fun entryOptions() {
     )
 
     when (option) {
-        1 -> addEntry();
-        2 -> deleteEntry();
-        3 -> updateEntry();
-        else -> println("┃ Invalid option entered: " + option);
+        1 -> addEntry()
+        2 -> deleteEntry()
+        3 -> updateEntry()
+        else -> println("┃ Invalid option entered: " + option)
     }
 }
 
@@ -109,21 +112,38 @@ fun listOptions() {
                   >┃   3) List Closed Budgets          ┃
                   >┃   4) List Entries by Amount Spent ┃
                   >┃   5) List full Budgets            ┃
-                  >┃   6) Search Entry by Location     ┃
-                  >┃   7) Budgets Overview             ┃
                   >┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
          > ==▶ """.trimMargin(">")
     )
 
     when (option) {
-        1 -> listBudgets();
-        2 -> listActiveBudgets();
-        3 -> listClosedBudgets();
-        4 -> listEntriesByMostSpent();
-        5 -> listFullBudgets();
-        6 -> searchEntriesByLocation();
-        7 -> budgetOverview();
+        1 -> listBudgets()
+        2 -> listActiveBudgets()
+        3 -> listClosedBudgets()
+        4 -> listEntriesByMostSpent()
+        5 -> listFullBudgets()
         else -> println("┃ Invalid option entered: " + option);
+    }
+}
+
+fun reportOptions() {
+    val option = readNextInt(
+        """
+                  >┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+                  >┃          REPORT OPTIONS           ┃
+                  >┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+                  >┃   1) Budgets Overview             ┃
+                  >┃   2) Search Entry by Location     ┃
+                  >┃   3) Search Budget by Title       ┃
+                  >┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+         > ==▶ """.trimMargin(">")
+    )
+
+    when (option) {
+        1 -> budgetOverview()
+        2 -> searchEntriesByLocation()
+        3 -> searchBudgetByTitle()
+        else -> println("┃ Invalid option entered: " + option)
     }
 }
 
@@ -173,6 +193,16 @@ fun searchEntriesByLocation() {
     val searchResults = budgetAPI.searchEntriesByLocation(searchLocation)
     if (searchResults.isEmpty()) {
         println("┃ There is no entry with that location currently stored")
+    } else {
+        println(searchResults)
+    }
+}
+
+fun searchBudgetByTitle() {
+    val searchTitle = readNextLine(" ┃ Enter Title to search by: ")
+    val searchResults = budgetAPI.searchByTitle(searchTitle)
+    if (searchResults.isEmpty()) {
+        println(" ┃ There is no budget with that title currently stored")
     } else {
         println(searchResults)
     }
@@ -243,7 +273,7 @@ fun addEntry() {
                     transactionType = readNextLine("┃ Transaction Type?: ")
                 )
             )
-        }else{
+        } else {
             println("This budget is already full, delete an entry or close the budget")
         }
     }

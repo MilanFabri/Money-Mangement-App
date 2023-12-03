@@ -100,6 +100,10 @@ class BudgetAPI(serializerType: Serializer) {
         if (numberOfFullBudgets() == 0) "┃ There is currently no full budgets stored!"
         else formatListString(budgets.filter { budget -> budget.isBudgetFull })
 
+    fun searchByTitle (searchString: String) =
+        formatListString(
+            budgets.filter { budget -> budget.budgetTitle.contains(searchString, ignoreCase = true) })
+
     fun searchEntriesByLocation(searchString: String): String {
         return if (numberOfBudgets() == 0) "┃ There is currently no active budgets stored!"
         else {
