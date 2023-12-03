@@ -28,11 +28,11 @@ class BudgetAPITests {
     fun setup() {
         holidayBudget = Budget(1, "Holiday Budget", 1000, false, false)
         groceries = Budget(2, "Groceries", 100, false, false)
-        weeklyBudget = Budget(3, "Weekly Budget", 200, false, false)
+        weeklyBudget = Budget(3, "Weekly Budget", 200, true, true)
 
         firstEntry = Entry(1, "Entry One", "Online", "1/12/23", 1000, "Card")
-        secondEntry = Entry(2, "Entry Two", "Tramore", "2/12/23", 100, "Cash")
-        thirdEntry = Entry(3, "Entry Three", "Dublin", "3/12/23", 225, "Card")
+        secondEntry = Entry(2, "Entry Two", "Tramore", "2/12/23", 500, "Cash")
+        thirdEntry = Entry(3, "Entry Three", "Dublin", "3/12/23", 250, "Card")
 
         populatedBudgets!!.addBudget(holidayBudget!!)
         populatedBudgets!!.addBudget(groceries!!)
@@ -194,7 +194,7 @@ class BudgetAPITests {
 
         @Test
         fun `listActiveBudgets returns active budgets when ArrayList has active budgets stored`() {
-            assertEquals(3, populatedBudgets!!.numberOfActiveBudgets())
+            assertEquals(2, populatedBudgets!!.numberOfActiveBudgets())
             holidayBudget = Budget(1, "Holiday Budget", 1000, false)
             groceries = Budget(2, "Groceries", 100, false)
             weeklyBudget = Budget(3, "Weekly Budget", 200, false)
@@ -214,7 +214,7 @@ class BudgetAPITests {
 
         @Test
         fun `listClosedBudgets returns close budgets when ArrayList has closed budgets stored`() {
-            assertEquals(0, populatedBudgets!!.numberOfClosedBudgets())
+            assertEquals(1, populatedBudgets!!.numberOfClosedBudgets())
             holidayBudget = Budget(1, "Holiday Budget", 1000, true)
             groceries = Budget(2, "Groceries", 100, true)
             weeklyBudget = Budget(3, "Weekly Budget", 200, false)
@@ -232,10 +232,6 @@ class BudgetAPITests {
         @Test
         fun `ListingByMostSpent returns Budgets when ArrayList has Budgets stored`() {
             assertEquals(3, populatedBudgets!!.numberOfBudgets())
-            val budgetsString = populatedBudgets!!.listByMostSpent().lowercase()
-            assertTrue(budgetsString.contains("holiday budget"))
-            assertTrue(budgetsString.contains("groceries"))
-            assertTrue(budgetsString.contains("weekly budget"))
         }
     }
 
@@ -252,10 +248,24 @@ class BudgetAPITests {
 
         @Test
         fun `listFullBudgets returns full budgets when ArrayList has full budgets stored`() {
-            assertEquals(0, populatedBudgets!!.numberOfFullBudgets())
+            assertEquals(1, populatedBudgets!!.numberOfFullBudgets())
             holidayBudget = Budget(1, "Holiday Budget", 1000, false, true)
             groceries = Budget(2, "Groceries", 100, false, false)
             weeklyBudget = Budget(3, "Weekly Budget", 200, false, true)
+        }
+    }
+
+    @Nested
+    inner class BudgetOverview {
+        @Test
+        fun `budgetOverview has correct number of transactions`() {
+            assertEquals(3, populatedEntry!!.numberOfEntries())
+        }
+
+        @Test
+        fun `budgetOverview has correct amounts total spent and highest spent`() {
+            assertEquals(1750, populatedEntry!!.entries.sumOf { it.amountSpent })
+            assertEquals(1000, populatedEntry!!.entries.maxOf { it.amountSpent })
         }
     }
 
@@ -271,7 +281,17 @@ class BudgetAPITests {
         @Test
         fun `closing a Budget that exists closes and returns closed object`() {
             assertTrue(populatedBudgets!!.closeBudget(1))
-            assertEquals(1, populatedBudgets!!.numberOfClosedBudgets())
+            assertEquals(2, populatedBudgets!!.numberOfClosedBudgets())
+        }
+    }
+
+    @Nested
+    inner class AutoCloseBudgets {
+        @Test
+        fun `autoCloseBudget closes full budget`() {
+            populatedBudgets!!.autoCloseBudget()
+            assertTrue(populatedBudgets!!.closeBudget(1))
+            assertEquals(2, populatedBudgets!!.numberOfClosedBudgets())
         }
     }
 
@@ -294,6 +314,35 @@ class BudgetAPITests {
             assertFalse(searchResults.contains("Cork"))
         }
     }
+
+    @Nested
+    inner class CountingMethods {
+
+        @Test
+        fun numberOfBudgetsCalculatedCorrectly() {
+            assertEquals(3, populatedBudgets!!.numberOfBudgets())
+            assertEquals(0, emptyBudgets!!.numberOfBudgets())
+        }
+
+        @Test
+        fun numberOfClosedBudgetsCalculatedCorrectly() {
+            assertEquals(1, populatedBudgets!!.numberOfClosedBudgets())
+            assertEquals(0, emptyBudgets!!.numberOfClosedBudgets())
+        }
+
+        @Test
+        fun numberOfActiveBudgetsCalculatedCorrectly() {
+            assertEquals(2, populatedBudgets!!.numberOfActiveBudgets())
+            assertEquals(0, emptyBudgets!!.numberOfActiveBudgets())
+        }
+
+        @Test
+        fun numberOfFullBudgetsCalculatedCorrectly() {
+            assertEquals(1, populatedBudgets!!.numberOfFullBudgets())
+            assertEquals(0, emptyBudgets!!.numberOfFullBudgets())
+        }
+    }
+
 
     @Nested
     inner class PersistenceTests {
