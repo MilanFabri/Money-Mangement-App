@@ -110,6 +110,7 @@ fun listOptions() {
                   >┃   4) List Entries by Amount Spent ┃
                   >┃   5) List full Budgets            ┃
                   >┃   6) Search Entry by Location     ┃
+                  >┃   7) Budgets Overview             ┃
                   >┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
          > ==▶ """.trimMargin(">")
     )
@@ -121,6 +122,7 @@ fun listOptions() {
         4 -> listEntriesByMostSpent();
         5 -> listFullBudgets();
         6 -> searchEntriesByLocation();
+        7 -> budgetOverview();
         else -> println("┃ Invalid option entered: " + option);
     }
 }
@@ -160,6 +162,10 @@ fun listEntriesByMostSpent() {
 fun listFullBudgets() {
     budgetAPI.fullBudget()
     println(budgetAPI.listFullBudgets())
+}
+
+fun budgetOverview() {
+    println(budgetAPI.budgetOverview())
 }
 
 fun searchEntriesByLocation() {

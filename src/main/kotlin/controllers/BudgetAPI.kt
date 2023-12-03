@@ -78,7 +78,9 @@ class BudgetAPI(serializerType: Serializer) {
         else {
             var listByMostSpent = ""
             for (budget in budgets) {
-                listByMostSpent += budget.budgetTitle + " ┃\n " + budget.entries.sortedByDescending { it.amountSpent } + "\n"
+                for (entry in budget.entries) {
+                    listByMostSpent += "┃ ${budget.budgetTitle}\n┃ ${budget.entries.sortedByDescending { it.amountSpent }}\n"
+                }
             }
             listByMostSpent
         }
@@ -114,13 +116,29 @@ class BudgetAPI(serializerType: Serializer) {
         }
     }
 
-@Throws(Exception::class)
-fun load() {
-    budgets = serializer.read() as ArrayList<Budget>
-}
+    fun budgetOverview(): String =
+        if (numberOfActiveBudgets() == 0) "┃ There is currently no active budgets stored!"
+        else {
+            var budgetOverview = ""
+            for (budget in budgets) {
+                budgetOverview += "┃ ${budget.budgetTitle}\n┃ Number of Transactions: ${budget.entries.size}\n" +
+                                  "┃ Total Amount Spent: €${budget.entries.sumOf { it.amountSpent }}\n" +
+                                  "┃ Highest Amount Spent in One Transaction: €${budget.entries.maxOf { it.amountSpent }}\n"+
+                                  "\n"
 
-@Throws(Exception::class)
-fun store() {
-    serializer.write(budgets)
-}
+                }
+            budgetOverview
+        }
+
+
+
+    @Throws(Exception::class)
+    fun load() {
+        budgets = serializer.read() as ArrayList<Budget>
+    }
+
+    @Throws(Exception::class)
+    fun store() {
+        serializer.write(budgets)
+    }
 }
