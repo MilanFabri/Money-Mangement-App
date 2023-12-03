@@ -12,9 +12,12 @@
 - Functionality for **"Adding"**, **"Listing"**, **"Updating"**, and **"Deleting"** Budgets and Entries.
 - Functionality to **"Close Budgets"**
 - Functionality to **"Auto Close Budgets"** if the entries amount spent exceeds the allocated amount in a budget
-- Improved main menu and listing outputs
-- New submenus to clean up main menu
+- Listing By Most Spent, Listing Full Budgets, Search Entries by Location, Search Budget by Title
+- Budgets Overview Feature
 - Logging capabilities are added via MicroUtils Kotlin-Logging
 - ScannerInput utility is included for robust user I/O
 - Grade Tasks such as **"Dokka"**, **"Kdocs"**, **"Jacoco"**, **"KTLint"** and **"Fat Jar"**
 - **JUnit** Testing for code
+
+![image](https://github.com/MilanFabri/Money-Mangement-App/assets/117904820/51915e0e-612e-4b0b-829d-530cfcd26483)
+
