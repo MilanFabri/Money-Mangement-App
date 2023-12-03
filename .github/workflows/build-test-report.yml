@@ -34,3 +34,7 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+
+      # Runs the Gradle build task
+      - name: Run the Gradle Build
+        run: ./gradlew build
