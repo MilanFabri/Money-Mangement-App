@@ -1,7 +1,6 @@
 package models
 
 import utils.Utilities
-import utils.Utilities.formatListString
 
 data class Budget(
     var budgetID: Int,
